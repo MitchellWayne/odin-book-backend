@@ -6,8 +6,8 @@ var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
 
 var indexRouter = require('./routes/index');
-var userRouter = require('./routes/userRoutes');
-var postRouter = require('./routes/postRoutes');
+var userRouter = require('./routes/userRouter');
+var postRouter = require('./routes/postRouter');
 
 var app = express();
 
