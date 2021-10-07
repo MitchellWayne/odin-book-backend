@@ -15,8 +15,13 @@ exports.user_post = function(req, res){
 
 };
 
-exports.user_get = function(req, res){
-
+exports.user_get = function(req, res, next){
+  User.findById(req.params.userID)
+  .exec(function (err, user){
+    if (err) return next(err);
+    if (!post) return res.status(404).json({err: "could not retive user by ID"});
+    return res.status(200).json(user);
+  });
 };
 
 exports.user_put = function(req, res){
