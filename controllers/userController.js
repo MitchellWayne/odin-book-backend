@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-exports.userlist_get = function(req, res, next){
+exports.userlist_get = function(req, res){
   User.find()
   .exec(function(err, userList){
-    if(err) return next(err);
+    if(err) return res.status(404).json({err: err});
     if(!userList) return res.status(404).json({err: "could not retrieve user list or users DNE"});
     return res.status(200).json(userList);
   });
@@ -22,28 +22,31 @@ exports.user_post = [
   body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
   body('confirmPassword', 'Passwords do not match.').trim().custom((value, { req }) => value === req.body.password),
 
-  // (req, res, next) => {
-  //   const errors = validationResult(req);
+  (req, res) => {
+    const errors = validationResult(req);
 
-  //   bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
-  //     if (err) return next(err);
-  //     else {
-  //       const user = new User({
-  //         username: req.body.username,
-  //         password: hashedPassword,
-  //       }).save(err => {
-  //         if (err) return res.status(404).json({error: err});
-  //         return res.status(200).json({message: "successfully made user"});
-  //       });
-  //     }
-  //   });
-  // }
+    bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
+      if(err) return res.status(404).json({err: err});
+      if(errors) return res.status(404).json({err: errors});
+      else {
+        const user = new User({
+          firstname: req.body.firstName,
+          lastname: req.body.lastName,
+          username: req.body.userName,
+          password: hashedPassword,
+        }).save(err => {
+          if (err) return res.status(404).json({error: err});
+          return res.status(200).json({message: "successfully made user"});
+        });
+      }
+    });
+  }
 ];
 
-exports.user_get = function(req, res, next){
+exports.user_get = function(req, res){
   User.findById(req.params.userID)
   .exec(function (err, user){
-    if (err) return next(err);
+    if (err) return res.status(404).json({err: err});
     if (!post) return res.status(404).json({err: "could not retive user by ID"});
     return res.status(200).json(user);
   });
