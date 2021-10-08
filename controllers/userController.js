@@ -70,7 +70,6 @@ exports.user_put = [
   body('lastname', 'Last name must not be empty.').trim().isLength({min: 1}).escape(),
   body('username', 'Username must not be empty.').trim().isLength({min: 1}).escape(),
   body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
-  body('confirmPassword', 'Passwords do not match.').trim().custom((value, { req }) => value === req.body.password),
 
   (req, res) => {
     const errors = validationResult(req);
@@ -84,7 +83,7 @@ exports.user_put = [
         lastname: req.body.lastname,
         username: req.body.username,
         password: hashedPassword,
-        _id: req.body.userid
+        _id: req.body.userID
       });
 
       User.findByIdAndUpdate(req.params.userid, user, {}, function(updateErr, updatedUser){
