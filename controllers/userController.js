@@ -21,7 +21,6 @@ exports.userlist_get = function(req, res){
   });
 };
 
-// Need to check to make sure username doesn't already exist!
 exports.user_post = [
   // Form validation
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
@@ -31,21 +30,26 @@ exports.user_post = [
 
   (req, res) => {
     const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(404).json({err: errors});
 
-    bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
-      if(err) return res.status(404).json({err: err});
-      if(!errors.isEmpty()) return res.status(404).json({err: errors});
-      else {
-        const user = new User({
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          username: req.body.username,
-          password: hashedPassword,
-        }).save(saveErr => {
-          if (saveErr) return res.status(404).json({err: saveErr});
-          return res.status(200).json({message: "successfully made user"});
+    User.findOne({ username: req.body.username})
+    .exec(function(findErr, userExists){
+      if(findErr) return res.status(404).json({err: findErr});
+      if(userExists) return res.status(406).json({err: "username already taken"});
+        bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
+          if(err) return res.status(404).json({err: err});
+          else {
+            const user = new User({
+              firstname: req.body.firstname,
+              lastname: req.body.lastname,
+              username: req.body.username,
+              password: hashedPassword,
+            }).save(saveErr => {
+              if (saveErr) return res.status(404).json({err: saveErr});
+              return res.status(201).json({message: "successfully made user"});
+            });
+          }
         });
-      }
     });
   }
 ];
@@ -85,12 +89,14 @@ exports.user_put = [
 
       User.findByIdAndUpdate(req.params.userid, user, {}, function(updateErr, updatedUser){
         if (updateErr) return next(updateErr);
-        return res.status(200).json({message: "user updated successfully"});
+        return res.status(201).json({message: "user updated successfully"});
       });
     });
   }
 ];
 
+// If a user is deleted, they must also be removed from existing friendslists,
+// and their post array must be deleted as well
 exports.user_delete = function(req, res){
 
 };
