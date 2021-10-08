@@ -5,9 +5,10 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-// Change this to only have fullnames + ID, reduce server load on MongoDB
+// Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   User.find()
+  .select('firstName lastName')
   .exec(function(err, userList){
     if(err) return res.status(404).json({err: err});
     if(!userList) return res.status(404).json({err: "could not retrieve user list or users DNE"});
