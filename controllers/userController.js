@@ -7,20 +7,21 @@ const User = require('../models/user');
 
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
-  const { firstName, lastName } = req.query;
+  const { firstname, lastname } = req.query;
   User.find()
   .select('firstname lastname username')
   .exec(function(err, userList){
     if(err) return res.status(404).json({err: err});
     if(!userList) return res.status(404).json({err: "could not retrieve user list or users DNE"});
 
-
-    // if(firstName) userList = 
+    if(firstname) userList = userList.filter(x => x.firstname === firstname);
+    if(lastname) userList = userList.filter(x => x.lastname === lastname);
 
     return res.status(200).json(userList);
   });
 };
 
+// Need to check to make sure username doesn't already exist!
 exports.user_post = [
   // Form validation
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
