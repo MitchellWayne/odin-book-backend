@@ -4,6 +4,9 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const Post = require('../models/post');
+
+// Maybe actually use next(err) and html-errors 
 
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
@@ -78,16 +81,15 @@ exports.user_put = [
       if(err) return res.status(404).json({err: err});
       if(!errors.isEmpty()) return res.status(404).json({err: errors});
 
-      const user = new User({
+      const user = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         username: req.body.username,
         password: hashedPassword,
-        _id: req.body.userID
-      });
+      };
 
-      User.findByIdAndUpdate(req.params.userid, user, {}, function(updateErr, updatedUser){
-        if (updateErr) return next(updateErr);
+      User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
+        if (updateErr) return res.status(404).json({err: updateErr});
         return res.status(201).json({message: "user updated successfully"});
       });
     });
@@ -97,7 +99,18 @@ exports.user_put = [
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
 exports.user_delete = function(req, res){
-
+  User.findById(req.params.userID)
+  .exec(function(err, delUser){
+    if (err) return res.status(404).json({err: err});
+    if (!user) return res.status(404).json({err: "could not retive user by ID"});
+    Post.deleteMany({author: delUser._id}, function(err){
+      if (err) return res.status(404).json({err: err});
+      User.findByIdAndDelete(req.params.userID, function(err){
+        if (err) return res.status(404).json({err: err});
+        return res.status(200).json({message: "user deleted successfully"});
+      });
+    });
+  });
 };
 
 // Add user_login and user_logout
