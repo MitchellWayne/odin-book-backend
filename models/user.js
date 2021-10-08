@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let userSchema = new Schema({
-  firstName: {type: String, required: true},
-  lastName: {type: String, required: true},
-  userName: {type: String, required: true},
+  firstname: {type: String, required: true},
+  lastname: {type: String, required: true},
+  username: {type: String, required: true},
   password: {type: String, required: true},
   friends: [{type: Schema.Types.ObjectId, ref: 'User', required: false}], // Array of user IDs
   requests: [{type: Schema.Types.ObjectId, ref: 'User', required: false}], // Same as above
