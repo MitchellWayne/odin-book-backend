@@ -97,7 +97,18 @@ exports.user_put = [
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
 exports.user_delete = function(req, res){
-
+  User.findById(req.params.userID)
+  .exec(function(err, delUser){
+    if (err) return res.status(404).json({err: err});
+    if (!user) return res.status(404).json({err: "could not retive user by ID"});
+    Post.deleteMany({author: delUser._id}, function(err){
+      if (err) return res.status(404).json({err: err});
+      User.findByIdAndDelete(req.params.userID, function(err){
+        if (err) return res.status(404).json({err: err});
+        return res.status(200).json({message: "user deleted successfully"});
+      });
+    });
+  });
 };
 
 // Add user_login and user_logout
