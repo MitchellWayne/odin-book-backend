@@ -54,7 +54,7 @@ exports.user_get = function(req, res){
   User.findById(req.params.userID)
   .exec(function (err, user){
     if (err) return res.status(404).json({err: err});
-    if (!post) return res.status(404).json({err: "could not retive user by ID"});
+    if (!user) return res.status(404).json({err: "could not retive user by ID"});
     return res.status(200).json(user);
   });
 };
