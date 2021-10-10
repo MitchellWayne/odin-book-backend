@@ -18,7 +18,7 @@ router.delete('/:userID/friends', user_controller.user_friend_delete);
 
 // User friend request routes
 router.post('/:userID/requests', user_controller.user_request_post);
-router.delete('/:userID/requests', user_controller.user_request_delete.length);
+router.delete('/:userID/requests', user_controller.user_request_delete);
 
 
 
