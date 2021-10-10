@@ -6,16 +6,21 @@ const user_controller = require('../controllers/userController');
 // Get users listing
 router.get('/', user_controller.userlist_get);
 
-// Create new user
+// Direct user routes
 router.post('/', user_controller.user_post);
-
-// Get user by ID
 router.get('/:userID', user_controller.user_get);
-
-// Update user by ID
 router.put('/:userID', user_controller.user_put);
-
-// Delete user by ID
 router.delete('/:userID', user_controller.user_delete);
+
+// User friend routes
+router.post('/:userID/friends', user_controller.user_friend_post);
+router.delete('/:userID/friends', user_controller.user_friend_delete);
+
+// User friend request routes
+router.post('/:userID/requests', user_controller.user_request_post);
+router.delete('/:userID/requests', user_controller.user_request_delete.length);
+
+
+
 
 module.exports = router;
