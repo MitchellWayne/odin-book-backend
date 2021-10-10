@@ -113,6 +113,22 @@ exports.user_delete = function(req, res){
   });
 };
 
+exports.user_request_post = function(req, res){
+
+};
+
+exports.user_request_delete = function(req, res){
+
+};
+
+exports.user_friend_post = function(req, res){
+
+};
+
+exports.user_friend_delete = function(req, res){
+
+};
+
 // Add user_login and user_logout
 
 // Instead of a userfriend_post, update the friend field through the request API
