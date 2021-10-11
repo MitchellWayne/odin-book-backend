@@ -114,17 +114,24 @@ exports.user_delete = function(req, res){
 exports.user_friend_post = function(req, res){
   // Check if given issuing request user exists,
   //  then $push their (friend)ID to target user (userID) friend list and vice versa
-  User.findById(req.body.friendID)
-  .exec(function(err, user){
-    if(err) return res.status(404).json({err: err});
-    if(!user) return res.status(404).json({err: "user issuing request DNE"});
+  // User.findById(req.body.friendID)
+  // .exec(function(err, user){
+  //   if(err) return res.status(404).json({err: err});
+  //   if(!user) return res.status(404).json({err: "user issuing request DNE"});
+  //   User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
+  //     if (err) return res.status(404).json({err: err});
+  //   });
+  //   User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
+  //     if (err) return res.status(404).json({err: err});
+  //   });
+  //   return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`});
+  // });
+
+  User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
+    if (err) return res.status(404).json({err: err});
     User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
       if (err) return res.status(404).json({err: err});
     });
-    User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
-      if (err) return res.status(404).json({err: err});
-    });
-    return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`});
   });
 };
 
