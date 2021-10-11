@@ -96,6 +96,7 @@ exports.user_put = [
 
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
+// TODO: Might be able to refactor and remove first findById and go straight to delete
 exports.user_delete = function(req, res){
   User.findById(req.params.userID)
   .exec(function(err, delUser){
@@ -112,25 +113,17 @@ exports.user_delete = function(req, res){
 };
 
 exports.user_friend_post = function(req, res){
-  // Check if given issuing request user exists,
-  //  then $push their (friend)ID to target user (userID) friend list and vice versa
-  // User.findById(req.body.friendID)
-  // .exec(function(err, user){
-  //   if(err) return res.status(404).json({err: err});
-  //   if(!user) return res.status(404).json({err: "user issuing request DNE"});
-  //   User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
-  //     if (err) return res.status(404).json({err: err});
-  //   });
-  //   User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
-  //     if (err) return res.status(404).json({err: err});
-  //   });
-  //   return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`});
-  // });
-
-  User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
-    if (err) return res.status(404).json({err: err});
-    User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
-      if (err) return res.status(404).json({err: err});
+  // Check that both userID and friendID exists, then cross push IDs into each.
+  User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
+  .exec(function(err, users){
+    if (err) return res.status(404).json({err: "failed to find users by ID"});
+    if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
+    User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
+      if (err) return res.status(404).json({err: "failed to update user by friendID"});
+      User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
+        if (err) return res.status(404).json({err: "failed to update user by userID"});
+        return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`})
+      });
     });
   });
 };
@@ -138,10 +131,12 @@ exports.user_friend_post = function(req, res){
 exports.user_friend_delete = function(req, res){
   // Check if given issuing request user exists,
   //  then $pull userID from their list, then remove friendID from other user
-  User.findById(req.body.friendID)
-  .exec(function(err, user){
-    if(err) return res.status(404).json({err: err});
-    if(!user) return res.status(404).json({err: "user issuing friend removal DNE"});
+  User.findByIdAndUpdate(req.body.friendID, { $pull: {friends: req.params.userID}}, function(err){
+    if (err) return res.status(404).json({err: "failed to find user by friendID"});   
+    User.findByIdAndUpdate(req.params.userID, { $pull: {friends: req.body.friendID}}, function(err){
+      if (err) return res.status(404).json({err: "failed to find user by userID"});
+      return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are no longer friends`})
+    }); 
   });
 };
 
