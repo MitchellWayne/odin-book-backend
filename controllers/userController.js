@@ -139,8 +139,28 @@ exports.user_friend_delete = function(req, res){
   });
 };
 
-exports.user_request_post = function(req, res){
+// Request planning
+//  Issuing user does not keep a copy of the request, only the target user
+//  friend API linked to request array, must check that request exists before friend_post
+//  friend_post should also delete the request
+exports.user_request_post = async function(req, res){
+  if (req.body.friendID.match(/^[0-9a-fA-F]{24}$/)
+  && req.params.userID.match(/^[0-9a-fA-F]{24}$/)){
 
+    let issuing = await User.exists({ _id: req.body.friendID});
+    let receiving = await User.exists({ _id: req.params.userID});
+
+    if (issuing && receiving) {
+      User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
+        if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
+        return res.status(200).json({message: "successfully pushed request to user"});
+      });
+    } else {
+      return res.status(404).json({message: "issuing or receiving user dne"});
+    }
+  } else {
+    return res.status(404).json({message: "invalid objectid formatting"});
+  }
 };
 
 exports.user_request_delete = function(req, res){
