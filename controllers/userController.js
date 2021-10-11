@@ -6,8 +6,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Post = require('../models/post');
 
-// Maybe actually use next(err) and html-errors 
-
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
@@ -115,7 +113,7 @@ exports.user_delete = function(req, res){
 
 exports.user_friend_post = function(req, res){
   // Check if given issuing request user exists,
-  //  then add their (friend)ID to target user (userID) friend list and vice versa
+  //  then $push their (friend)ID to target user (userID) friend list and vice versa
   User.findById(req.body.friendID)
   .exec(function(err, user){
     if(err) return res.status(404).json({err: err});
@@ -131,7 +129,13 @@ exports.user_friend_post = function(req, res){
 };
 
 exports.user_friend_delete = function(req, res){
-
+  // Check if given issuing request user exists,
+  //  then $pull userID from their list, then remove friendID from other user
+  User.findById(req.body.friendID)
+  .exec(function(err, user){
+    if(err) return res.status(404).json({err: err});
+    if(!user) return res.status(404).json({err: "user issuing friend removal DNE"});
+  });
 };
 
 exports.user_request_post = function(req, res){
