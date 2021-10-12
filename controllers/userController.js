@@ -153,9 +153,7 @@ exports.user_friend_delete = function(req, res){
 //  friend API linked to request array, must check that request exists before friend_post
 //  friend_post should also delete the request
 exports.user_request_post = async function(req, res){
-  if (req.body.friendID.match(/^[0-9a-fA-F]{24}$/)
-  && req.params.userID.match(/^[0-9a-fA-F]{24}$/)){
-
+  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
     let issuing = await User.exists({ _id: req.body.friendID});
     let receiving = await User.exists({ _id: req.params.userID});
 
@@ -173,9 +171,7 @@ exports.user_request_post = async function(req, res){
 };
 
 exports.user_request_delete = async function(req, res){
-  if (req.body.friendID.match(/^[0-9a-fA-F]{24}$/)
-  && req.params.userID.match(/^[0-9a-fA-F]{24}$/)){
-    
+  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
     let issuing = await User.exists({ _id: req.body.friendID});
     let receiving = await User.exists({ _id: req.params.userID});
 
