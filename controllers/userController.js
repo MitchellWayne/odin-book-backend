@@ -6,6 +6,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Post = require('../models/post');
 
+// Helpers
+function isObjectId(id) {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) return true;
+  else return false;
+}
+
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
@@ -108,19 +114,22 @@ exports.user_delete = function(req, res){
 
 // TODO: Maybe check that they aren't already friends
 exports.user_friend_post = function(req, res){
-  // Check that both userID and friendID exists, then cross push IDs into each.
-  User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
-  .exec(function(err, users){
-    if (err) return res.status(404).json({err: "failed to find users by ID"});
-    if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
-    User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
-      if (err) return res.status(404).json({err: "failed to update user by friendID"});
-      User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
-        if (err) return res.status(404).json({err: "failed to update user by userID"});
-        return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`})
-      });
-    });
-  });
+  // // Check that both userID and friendID exists, then cross push IDs into each.
+  // User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
+  // .exec(function(err, users){
+  //   if (err) return res.status(404).json({err: "failed to find users by ID"});
+  //   if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
+  //   User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
+  //     if (err) return res.status(404).json({err: "failed to update user by friendID"});
+  //     User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
+  //       if (err) return res.status(404).json({err: "failed to update user by userID"});
+  //       return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`})
+  //     });
+  //   });
+  // });
+
+  if (req.body.friendID.match(/^[0-9a-fA-F]{24}$/)
+  && req.params.userID.match(/^[0-9a-fA-F]{24}$/)){
 };
 
 exports.user_friend_delete = function(req, res){
