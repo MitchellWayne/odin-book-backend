@@ -44,7 +44,6 @@ async function makeFriends(user1, user2, res){
 
 // APIs ---------------------
 
-// Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
   User.find()
@@ -61,7 +60,6 @@ exports.userlist_get = function(req, res){
 };
 
 exports.user_post = [
-  // Form validation
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
   body('lastname', 'Last name must not be empty.').trim().isLength({min: 1}).escape(),
   body('username', 'Username must not be empty.').trim().isLength({min: 1}).escape(),
@@ -104,7 +102,6 @@ exports.user_get = function(req, res){
 
 // Split this into separate name, user, and password update APIs
 exports.user_put = [
-  // Form validation
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
   body('lastname', 'Last name must not be empty.').trim().isLength({min: 1}).escape(),
   body('username', 'Username must not be empty.').trim().isLength({min: 1}).escape(),
@@ -134,6 +131,7 @@ exports.user_put = [
 
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
+// TODO: Remove from friendslists if user is deleted
 exports.user_delete = function(req, res){
   Post.deleteMany({author: req.params.userID}, function(err){
     if (err) return res.status(404).json({err: err, message: "could not delete user's posts"});
@@ -168,6 +166,7 @@ exports.user_friend_post = async function(req, res){
   } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
+// Maybe refactor to use userExists, but this still works either way
 exports.user_friend_delete = function(req, res){
   // Check that both userID and friendID exists, then cross pull IDs into each.
   User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
@@ -184,10 +183,6 @@ exports.user_friend_delete = function(req, res){
   });
 };
 
-// Request planning
-//  Issuing user does not keep a copy of the request, only the target user
-//  friend API linked to request array, must check that request exists before friend_post
-//  friend_post should also delete the request
 exports.user_request_post = async function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
     if (userExists(req.body.friendID) && userExists(req.params.userID)){
