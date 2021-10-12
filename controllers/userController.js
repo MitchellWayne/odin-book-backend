@@ -24,11 +24,17 @@ async function areFriends(user1, user2){
   return (confirmU1 && confirmU2);
 }
 
+async function requestExists(user1, user2){
+  let confirmed = await User.exists({ _id: user1, requests: { $elemMatch: {user2}}});
+  return confirmed;
+}
+
 async function makeFriends(user1, user2){
   User.findByIdAndUpdate(user1, {$push: {friends: user2}}, function(err){
     if (err) return res.status(404).json({err: err, message: `could not add ${user2} to ${user1}'s friends field`});
     User.findByIdAndUpdate(user2, {$push: {friends: user1}}, function(err){
       if (err) return res.status(404).json({err: err, message: `could not add ${user1} to ${user2}'s friends field`});
+      return res.status(200).json({message: `successfully made ${user1} and ${user2} friends`});
     });
   });
 }
@@ -133,22 +139,7 @@ exports.user_delete = function(req, res){
   });
 };
 
-// TODO: Maybe check that they aren't already friends
 exports.user_friend_post = function(req, res){
-  // // Check that both userID and friendID exists, then cross push IDs into each.
-  // User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
-  // .exec(function(err, users){
-  //   if (err) return res.status(404).json({err: "failed to find users by ID"});
-  //   if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
-  //   User.findByIdAndUpdate(req.body.friendID, { $push: {friends: req.params.userID}}, function(err){
-  //     if (err) return res.status(404).json({err: "failed to update user by friendID"});
-  //     User.findByIdAndUpdate(req.params.userID, { $push: {friends: req.body.friendID}}, function(err){
-  //       if (err) return res.status(404).json({err: "failed to update user by userID"});
-  //       return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are now friends`})
-  //     });
-  //   });
-  // });
-
   // Logic is ordered like so:
   // - Check if ID valid so no crashes
   //  - Check if users even exists
@@ -158,12 +149,14 @@ exports.user_friend_post = function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
     if (userExists(req.body.friendID) && userExists(req.params.userID)){
       if(!areFriends(req.body.friendID, req.params.userID)){
-        User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
-          if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests"});
-          else {
-            makeFriends(req.params.userID, req.body.friendID);
-          }
-        });
+        if (requestExists(req.params.userID, req.body.friendID)){
+          User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
+            if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests or request does not exist"});
+            else {
+              makeFriends(req.params.userID, req.body.friendID);
+            }
+          });
+        } else return res.status(404).json({message: "no matching friend requests exist for this user"});
       } else return res.status(404).json({message: "users are already friends"});
     } else return res.status(404).json({message: "issuing or receiving user dne"});
   } else return res.status(404).json({message: "invalid objectid formatting"});
