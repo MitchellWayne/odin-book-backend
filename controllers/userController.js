@@ -19,13 +19,15 @@ async function userExists(id) {
 }
 
 async function areFriends(user1, user2){
-  let confirmU1 = await User.exists({ _id: user1, friends: { $elemMatch: {user2}}});
-  let confirmU2 = await User.exists({ _id: user2, friends: { $elemMatch: {user1}}});
+  let confirmU1 = await User.exists({ _id: user1, friends: { $elemMatch: {$eq: user2}}});
+  let confirmU2 = await User.exists({ _id: user2, friends: { $elemMatch: {$eq: user1}}});
+  console.log("Users are friends: " + (confirmU1 && confirmU2));
   return (confirmU1 && confirmU2);
 }
 
 async function requestExists(user1, user2){
-  let confirmed = await User.exists({ _id: user1, requests: { $elemMatch: {user2}}});
+  let confirmed = await User.exists({ _id: user1, requests: { $elemMatch: {$eq: user2}}});
+  console.log("Request exists: " + confirmed);
   return confirmed;
 }
 
