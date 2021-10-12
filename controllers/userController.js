@@ -24,6 +24,15 @@ async function areFriends(user1, user2){
   return (confirmU1 && confirmU2);
 }
 
+async function makeFriends(user1, user2){
+  User.findByIdAndUpdate(user1, {$push: {friends: user2}}, function(err){
+    if (err) return res.status(404).json({err: err, message: `could not add ${user2} to ${user1}'s friends field`});
+    User.findByIdAndUpdate(user2, {$push: {friends: user1}}, function(err){
+      if (err) return res.status(404).json({err: err, message: `could not add ${user1} to ${user2}'s friends field`});
+    });
+  });
+}
+
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
@@ -152,7 +161,7 @@ exports.user_friend_post = function(req, res){
         User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
           if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests"});
           else {
-
+            makeFriends(req.params.userID, req.body.friendID);
           }
         });
       } else return res.status(404).json({message: "users are already friends"});
