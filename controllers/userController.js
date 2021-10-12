@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Post = require('../models/post');
 
-// Helpers
+// Helpers ------------------
+
 function isObjectId(id) {
   if (id.match(/^[0-9a-fA-F]{24}$/)) return true;
   else return false;
@@ -31,7 +32,7 @@ async function requestExists(user1, user2){
   return confirmed;
 }
 
-async function makeFriends(user1, user2){
+async function makeFriends(user1, user2, res){
   User.findByIdAndUpdate(user1, {$push: {friends: user2}}, function(err){
     if (err) return res.status(404).json({err: err, message: `could not add ${user2} to ${user1}'s friends field`});
     User.findByIdAndUpdate(user2, {$push: {friends: user1}}, function(err){
@@ -40,6 +41,8 @@ async function makeFriends(user1, user2){
     });
   });
 }
+
+// APIs ---------------------
 
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
@@ -141,21 +144,22 @@ exports.user_delete = function(req, res){
   });
 };
 
-exports.user_friend_post = function(req, res){
+exports.user_friend_post = async function(req, res){
   // Logic is ordered like so:
   // - Check if ID valid so no crashes
   //  - Check if users even exists
   //   - Make sure they aren't already friends
-  //    - Remove the related request from userID
-  //     - Add friends
+  //    - Check if request exists 
+  //     - Remove the related request from userID
+  //      - Add friends
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (userExists(req.body.friendID) && userExists(req.params.userID)){
-      if(!areFriends(req.body.friendID, req.params.userID)){
-        if (requestExists(req.params.userID, req.body.friendID)){
+    if (await userExists(req.body.friendID) && userExists(req.params.userID)){
+      if(!(await areFriends(req.body.friendID, req.params.userID))){
+        if (await requestExists(req.params.userID, req.body.friendID)){
           User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
             if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests or request does not exist"});
             else {
-              makeFriends(req.params.userID, req.body.friendID);
+              makeFriends(req.params.userID, req.body.friendID, res);
             }
           });
         } else return res.status(404).json({message: "no matching friend requests exist for this user"});
