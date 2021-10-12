@@ -18,6 +18,12 @@ async function userExists(id) {
   else return false;
 }
 
+async function areFriends(user1, user2){
+  let confirmU1 = await User.exists({ _id: user1, friends: { $elemMatch: {user2}}});
+  let confirmU2 = await User.exists({ _id: user2, friends: { $elemMatch: {user1}}});
+  return (confirmU1 && confirmU2);
+}
+
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
@@ -134,8 +140,22 @@ exports.user_friend_post = function(req, res){
   //   });
   // });
 
-  if (req.body.friendID.match(/^[0-9a-fA-F]{24}$/)
-  && req.params.userID.match(/^[0-9a-fA-F]{24}$/)){
+  // Logic is ordered like so:
+  // - Check if ID valid so no crashes
+  //  - Check if users even exists
+  //   - Make sure they aren't already friends
+  //    - Remove the related request from userID
+  //     - Add friends
+  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
+    if (userExists(req.body.friendID) && userExists(req.params.userID)){
+
+      
+    } else {
+      return res.status(404).json({message: "issuing or receiving user dne"});
+    }
+  } else {
+    return res.status(404).json({message: "invalid objectid formatting"});
+  }
 };
 
 exports.user_friend_delete = function(req, res){
@@ -160,7 +180,7 @@ exports.user_friend_delete = function(req, res){
 //  friend_post should also delete the request
 exports.user_request_post = async function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (userExists(req.body.friendID) && userExists(req.params.userID)) {
+    if (userExists(req.body.friendID) && userExists(req.params.userID)){
       User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
         if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
         return res.status(200).json({message: "successfully pushed request to user"});
@@ -175,7 +195,7 @@ exports.user_request_post = async function(req, res){
 
 exports.user_request_delete = function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (userExists(req.body.friendID) && userExists(req.params.userID)) {
+    if (userExists(req.body.friendID) && userExists(req.params.userID)){
       User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
         if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
         return res.status(200).json({message: "successfully pulled request from user"});
