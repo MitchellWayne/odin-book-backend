@@ -148,14 +148,16 @@ exports.user_friend_post = function(req, res){
   //     - Add friends
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
     if (userExists(req.body.friendID) && userExists(req.params.userID)){
+      if(!areFriends(req.body.friendID, req.params.userID)){
+        User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
+          if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests"});
+          else {
 
-      
-    } else {
-      return res.status(404).json({message: "issuing or receiving user dne"});
-    }
-  } else {
-    return res.status(404).json({message: "invalid objectid formatting"});
-  }
+          }
+        });
+      } else return res.status(404).json({message: "users are already friends"});
+    } else return res.status(404).json({message: "issuing or receiving user dne"});
+  } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
 exports.user_friend_delete = function(req, res){
@@ -185,12 +187,8 @@ exports.user_request_post = async function(req, res){
         if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
         return res.status(200).json({message: "successfully pushed request to user"});
       });
-    } else {
-      return res.status(404).json({message: "issuing or receiving user dne"});
-    }
-  } else {
-    return res.status(404).json({message: "invalid objectid formatting"});
-  }
+    } else return res.status(404).json({message: "issuing or receiving user dne"});
+  } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
 exports.user_request_delete = function(req, res){
@@ -200,12 +198,8 @@ exports.user_request_delete = function(req, res){
         if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
         return res.status(200).json({message: "successfully pulled request from user"});
       });
-    } else {
-      return res.status(404).json({message: "issuing or receiving user dne"});
-    }
-  } else {
-    return res.status(404).json({message: "invalid objectid formatting"});
-  }
+    } else return res.status(404).json({message: "issuing or receiving user dne"});
+  } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
 // Add user_login and user_logout
