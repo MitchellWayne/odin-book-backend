@@ -160,10 +160,7 @@ exports.user_friend_delete = function(req, res){
 //  friend_post should also delete the request
 exports.user_request_post = async function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    let issuing = await User.exists({ _id: req.body.friendID});
-    let receiving = await User.exists({ _id: req.params.userID});
-
-    if (issuing && receiving) {
+    if (userExists(req.body.friendID) && userExists(req.params.userID)) {
       User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
         if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
         return res.status(200).json({message: "successfully pushed request to user"});
@@ -176,12 +173,9 @@ exports.user_request_post = async function(req, res){
   }
 };
 
-exports.user_request_delete = async function(req, res){
+exports.user_request_delete = function(req, res){
   if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    let issuing = await User.exists({ _id: req.body.friendID});
-    let receiving = await User.exists({ _id: req.params.userID});
-
-    if (issuing && receiving) {
+    if (userExists(req.body.friendID) && userExists(req.params.userID)) {
       User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
         if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
         return res.status(200).json({message: "successfully pulled request from user"});
