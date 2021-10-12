@@ -13,7 +13,7 @@ function isObjectId(id) {
 }
 
 async function userExists(id) {
-  let check = await User.exists({ _id: req.body.friendID});
+  let check = await User.exists({ _id: id});
   if (check) return true;
   else return false;
 }
