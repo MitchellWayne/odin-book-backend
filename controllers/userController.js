@@ -12,6 +12,12 @@ function isObjectId(id) {
   else return false;
 }
 
+async function userExists(id) {
+  let check = await User.exists({ _id: req.body.friendID});
+  if (check) return true;
+  else return false;
+}
+
 // Get user list by fullnames + _id
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
