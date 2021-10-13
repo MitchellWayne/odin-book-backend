@@ -6,6 +6,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Post = require('../models/post');
 
+// TODO:
+//  Nesting Model and Query operations seem inefficient,
+//    Potentially need to look for another way to accomplish this more cleanly
+
 // Helpers ------------------
 
 function isObjectId(id) {
@@ -135,9 +139,15 @@ exports.user_put = [
 exports.user_delete = function(req, res){
   Post.deleteMany({author: req.params.userID}, function(err){
     if (err) return res.status(404).json({err: err, message: "could not delete user's posts"});
-    User.findByIdAndDelete(req.params.userID, function(err){
-      if (err) return res.status(404).json({err: err, message: "could not delete user"});
-      return res.status(200).json({message: "user deleted successfully"});
+    User.updateMany(
+      {friends: {$elemMatch: {$eq: req.params.userID}}},
+      {$pull: {friends: req.params.userID}},
+      function(err){
+        if (err) return res.status(404).json({err: err, message: "could not remove user from existing friend lists"});
+        User.findByIdAndDelete(req.params.userID, function(err){
+          if (err) return res.status(404).json({err: err, message: "could not delete user"});
+          return res.status(200).json({message: "user deleted successfully"});
+        });
     });
   });
 };
