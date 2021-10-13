@@ -10,6 +10,8 @@ const Post = require('../models/post');
 //  Nesting Model and Query operations seem inefficient,
 //    Potentially need to look for another way to accomplish this more cleanly
 
+// Split User_Put into seperate API endpoints
+
 // Helpers ------------------
 
 function isObjectId(id) {
@@ -135,7 +137,6 @@ exports.user_put = [
 
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
-// TODO: Remove from friendslists if user is deleted
 exports.user_delete = function(req, res){
   Post.deleteMany({author: req.params.userID}, function(err){
     if (err) return res.status(404).json({err: err, message: "could not delete user's posts"});
