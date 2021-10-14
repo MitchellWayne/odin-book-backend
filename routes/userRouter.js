@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 
 const user_controller = require('../controllers/userController');
 
@@ -23,8 +24,5 @@ router.delete('/:userID/requests', passport.authenticate('jwt', {session: false}
 // User auth
 router.post('/login', user_controller.user_login_post);
 router.post('/logout', passport.authenticate('jwt', {session: false}), user_controller.user_logout_post);
-
-
-
 
 module.exports = router;
