@@ -221,4 +221,10 @@ exports.user_request_delete = function(req, res){
   } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
-// Add user_login and user_logout
+exports.user_login_post = function(req, res){
+
+};
+
+exports.user_logout_post = function(req, res){
+
+};
