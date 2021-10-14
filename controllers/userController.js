@@ -218,7 +218,7 @@ exports.user_request_post = async function(req, res){
     if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
       if (await userExists(req.body.friendID) && await userExists(req.params.userID)){
         if (!(await areFriends(req.body.friendID, req.params.userID))){
-          User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
+          User.findByIdAndUpdate(req.body.friendID, { $push: {requests: req.params.userID}}, function(err){
             if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
             return res.status(200).json({message: "successfully pushed request to user"});
           });
