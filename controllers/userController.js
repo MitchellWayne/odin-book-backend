@@ -143,19 +143,23 @@ exports.user_put = [
 // If a user is deleted, they must also be removed from existing friendslists,
 // and their post array must be deleted as well
 exports.user_delete = function(req, res){
-  Post.deleteMany({author: req.params.userID}, function(err){
-    if (err) return res.status(404).json({err: err, message: "could not delete user's posts"});
-    User.updateMany(
-      {friends: {$elemMatch: {$eq: req.params.userID}}},
-      {$pull: {friends: req.params.userID}},
-      function(err){
-        if (err) return res.status(404).json({err: err, message: "could not remove user from existing friend lists"});
-        User.findByIdAndDelete(req.params.userID, function(err){
-          if (err) return res.status(404).json({err: err, message: "could not delete user"});
-          return res.status(200).json({message: "user deleted successfully"});
-        });
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    Post.deleteMany({author: req.params.userID}, function(err){
+      if (err) return res.status(404).json({err: err, message: "could not delete user's posts"});
+      User.updateMany(
+        {friends: {$elemMatch: {$eq: req.params.userID}}},
+        {$pull: {friends: req.params.userID}},
+        function(err){
+          if (err) return res.status(404).json({err: err, message: "could not remove user from existing friend lists"});
+          User.findByIdAndDelete(req.params.userID, function(err){
+            if (err) return res.status(404).json({err: err, message: "could not delete user"});
+            return res.status(200).json({message: "user deleted successfully"});
+          });
+      });
     });
-  });
+  }
 };
 
 exports.user_friend_post = async function(req, res){
@@ -166,61 +170,77 @@ exports.user_friend_post = async function(req, res){
   //    - Check if request exists 
   //     - Remove the related request from userID
   //      - Add friends
-  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (await userExists(req.body.friendID) && userExists(req.params.userID)){
-      if(!(await areFriends(req.body.friendID, req.params.userID))){
-        if (await requestExists(req.params.userID, req.body.friendID)){
-          User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
-            if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests or request does not exist"});
-            else {
-              makeFriends(req.params.userID, req.body.friendID, res);
-            }
-          });
-        } else return res.status(404).json({message: "no matching friend requests exist for this user"});
-      } else return res.status(404).json({message: "users are already friends"});
-    } else return res.status(404).json({message: "issuing or receiving user dne"});
-  } else return res.status(404).json({message: "invalid objectid formatting"});
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
+      if (await userExists(req.body.friendID) && userExists(req.params.userID)){
+        if(!(await areFriends(req.body.friendID, req.params.userID))){
+          if (await requestExists(req.params.userID, req.body.friendID)){
+            User.findByIdAndUpdate(req.params.userID, {$pull: {requests: req.body.friendID}}, function(err){
+              if (err) return res.status(404).json({err: err, message: "Could not update user's (userID) requests or request does not exist"});
+              else {
+                makeFriends(req.params.userID, req.body.friendID, res);
+              }
+            });
+          } else return res.status(404).json({message: "no matching friend requests exist for this user"});
+        } else return res.status(404).json({message: "users are already friends"});
+      } else return res.status(404).json({message: "issuing or receiving user dne"});
+    } else return res.status(404).json({message: "invalid objectid formatting"});
+  }
 };
 
 // Maybe refactor to use userExists, but this still works either way
 exports.user_friend_delete = function(req, res){
-  // Check that both userID and friendID exists, then cross pull IDs into each.
-  User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
-  .exec(function(err, users){
-    if (err) return res.status(404).json({err: "failed to find users by ID"});
-    if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
-    User.findByIdAndUpdate(req.body.friendID, { $pull: {friends: req.params.userID}}, function(err){
-      if (err) return res.status(404).json({err: "failed to update user by friendID"});
-      User.findByIdAndUpdate(req.params.userID, { $pull: {friends: req.body.friendID}}, function(err){
-        if (err) return res.status(404).json({err: "failed to update user by userID"});
-        return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are no longer friends`})
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    // Check that both userID and friendID exists, then cross pull IDs into each.
+    User.find({ $or: [{_id: req.params.userID}, {_id: req.body.friendID}]})
+    .exec(function(err, users){
+      if (err) return res.status(404).json({err: "failed to find users by ID"});
+      if (users.length !== 2) return res.status(404).json({err: "one or more users DNE"});
+      User.findByIdAndUpdate(req.body.friendID, { $pull: {friends: req.params.userID}}, function(err){
+        if (err) return res.status(404).json({err: "failed to update user by friendID"});
+        User.findByIdAndUpdate(req.params.userID, { $pull: {friends: req.body.friendID}}, function(err){
+          if (err) return res.status(404).json({err: "failed to update user by userID"});
+          return res.status(200).json({message: `${req.body.friendID} and ${req.params.userID} are no longer friends`})
+        });
       });
     });
-  });
+  }
 };
 
 exports.user_request_post = async function(req, res){
-  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (await userExists(req.body.friendID) && await userExists(req.params.userID)){
-      if (!(await areFriends(req.body.friendID, req.params.userID))){
-        User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
-          if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
-          return res.status(200).json({message: "successfully pushed request to user"});
-        });
-      } else return res.status(404).json({message: "users are already friends"});
-    } else return res.status(404).json({message: "issuing or receiving user dne"});
-  } else return res.status(404).json({message: "invalid objectid formatting"});
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
+      if (await userExists(req.body.friendID) && await userExists(req.params.userID)){
+        if (!(await areFriends(req.body.friendID, req.params.userID))){
+          User.findByIdAndUpdate(req.params.userID, { $push: {requests: req.body.friendID}}, function(err){
+            if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
+            return res.status(200).json({message: "successfully pushed request to user"});
+          });
+        } else return res.status(404).json({message: "users are already friends"});
+      } else return res.status(404).json({message: "issuing or receiving user dne"});
+    } else return res.status(404).json({message: "invalid objectid formatting"});
+  }
 };
 
 exports.user_request_delete = function(req, res){
-  if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
-    if (userExists(req.body.friendID) && userExists(req.params.userID)){
-      User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
-        if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
-        return res.status(200).json({message: "successfully pulled request from user"});
-      });
-    } else return res.status(404).json({message: "issuing or receiving user dne"});
-  } else return res.status(404).json({message: "invalid objectid formatting"});
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
+      if (userExists(req.body.friendID) && userExists(req.params.userID)){
+        User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
+          if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
+          return res.status(200).json({message: "successfully pulled request from user"});
+        });
+      } else return res.status(404).json({message: "issuing or receiving user dne"});
+    } else return res.status(404).json({message: "invalid objectid formatting"});
+  }
 };
 
 exports.user_login_post = function(req, res, next){
