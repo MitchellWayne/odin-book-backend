@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Post = require('../models/post');
 
+require('dotenv').config();
+
 // TODO:
 //  Nesting Model and Query operations seem inefficient,
 //    Potentially need to look for another way to accomplish this more cleanly
@@ -222,7 +224,14 @@ exports.user_request_delete = function(req, res){
 };
 
 exports.user_login_post = function(req, res){
-
+  passport.authenticate('local', {session: false}, (err, user, info) => {
+    if (err || !user) return res.status(400).json({ message: 'Unable to log in' });
+    req.login(user, {session: false}, (err) => {
+      if (err) res.send(err);
+      const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '12h'});
+      return res.json({user, token});
+    });
+  })(req, res, next);
 };
 
 exports.user_logout_post = function(req, res){
