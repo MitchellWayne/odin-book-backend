@@ -235,5 +235,6 @@ exports.user_login_post = function(req, res){
 };
 
 exports.user_logout_post = function(req, res){
-
+  req.logout();
+  return res.json({message: 'logged out successfully'});
 };
