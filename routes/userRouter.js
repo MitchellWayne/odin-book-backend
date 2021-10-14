@@ -18,7 +18,7 @@ router.post('/:userID/friends', passport.authenticate('jwt', {session: false}), 
 router.delete('/:userID/friends', passport.authenticate('jwt', {session: false}), user_controller.user_friend_delete);
 
 // User friend request routes
-router.post('/:userID/requests', user_controller.user_request_post);
+router.post('/:userID/requests', passport.authenticate('jwt', {session: false}), user_controller.user_request_post);
 router.delete('/:userID/requests', passport.authenticate('jwt', {session: false}), user_controller.user_request_delete);
 
 // User auth
