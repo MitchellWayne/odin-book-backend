@@ -20,6 +20,10 @@ router.delete('/:userID/friends', user_controller.user_friend_delete);
 router.post('/:userID/requests', user_controller.user_request_post);
 router.delete('/:userID/requests', user_controller.user_request_delete);
 
+// User auth
+router.post('/login', user_controller.user_login_post);
+router.post('/logout', passport.authenticate('jwt', {session: false}), user_controller.user_logout_post);
+
 
 
 
