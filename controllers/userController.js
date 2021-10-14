@@ -113,24 +113,28 @@ exports.user_put = [
   body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
 
   (req, res) => {
-    const errors = validationResult(req);
+    if(req.user._id !== req.params._id) {
+      return res.status(404).json({message: "user not authorized for different user endpoints"});
+    } else {
+      const errors = validationResult(req);
 
-    bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
-      if(err) return res.status(404).json({err: err});
-      if(!errors.isEmpty()) return res.status(404).json({err: errors});
+      bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
+        if(err) return res.status(404).json({err: err});
+        if(!errors.isEmpty()) return res.status(404).json({err: errors});
 
-      const user = {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        username: req.body.username,
-        password: hashedPassword,
-      };
+        const user = {
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          username: req.body.username,
+          password: hashedPassword,
+        };
 
-      User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
-        if (updateErr) return res.status(404).json({err: updateErr});
-        return res.status(201).json({message: "user updated successfully"});
+        User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
+          if (updateErr) return res.status(404).json({err: updateErr});
+          return res.status(201).json({message: "user updated successfully"});
+        });
       });
-    });
+    }
   }
 ];
 
