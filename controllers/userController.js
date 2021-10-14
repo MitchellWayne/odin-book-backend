@@ -115,7 +115,7 @@ exports.user_put = [
   body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
 
   (req, res) => {
-    if(req.user._id !== req.params._id) {
+    if(req.user._id.toString() !== req.params.userID) {
       return res.status(404).json({message: "user not authorized for different user endpoints"});
     } else {
       const errors = validationResult(req);
@@ -223,9 +223,9 @@ exports.user_request_delete = function(req, res){
   } else return res.status(404).json({message: "invalid objectid formatting"});
 };
 
-exports.user_login_post = function(req, res){
+exports.user_login_post = function(req, res, next){
   passport.authenticate('local', {session: false}, (err, user, info) => {
-    if (err || !user) return res.status(400).json({ message: 'Unable to log in' });
+    if (err || !user) return res.status(400).json({err: err, message: info });
     req.login(user, {session: false}, (err) => {
       if (err) res.send(err);
       const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '12h'});
