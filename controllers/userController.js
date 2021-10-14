@@ -106,7 +106,6 @@ exports.user_get = function(req, res){
   });
 };
 
-// Split this into separate name, user, and password update APIs
 exports.user_put = [
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
   body('lastname', 'Last name must not be empty.').trim().isLength({min: 1}).escape(),
