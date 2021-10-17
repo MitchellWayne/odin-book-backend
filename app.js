@@ -38,8 +38,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
 app.use('/', indexRouter);
+userRouter.use('/:userID/posts', postRouter);
 app.use('/users', userRouter);
-app.use('/users/:userID/posts', postRouter);
+
+// app.use('/users/:userID/posts', postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
