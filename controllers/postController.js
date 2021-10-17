@@ -27,14 +27,19 @@ exports.post_post = [
         timestamp: Date.now(),
       }).save(saveErr => {
         if (saveErr) return res.status(404).json({err: saveErr});
-              return res.status(201).json({message: "successfully made post"});
+        return res.status(201).json({message: "successfully made post"});
       });
     }
   }
 ];
 
 exports.post_get = function(req, res){
-
+  Post.findById(req.params.postID)
+  .exec(function(err, post){
+    if (err) return res.status(404).json({err: err, message: "error retrieving post"});
+    if (!post) return res.status(404).json({err: "could not retive post by ID or post DNE"});
+    return res.status(200).json(user);    
+  });
 };
 
 exports.post_put = function(req, res){
