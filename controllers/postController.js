@@ -68,5 +68,12 @@ exports.post_put = [
 ];
 
 exports.post_delete = function(req, res){
-
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    Post.findByIdAndDelete(req.params.postID, function(delError){
+      if(delError) return res.status(404).json({err: delError, message: "failed to deleted post by id"});
+      else return res.status(200).json({message: "post successfully deleted"});
+    });
+  }
 };
