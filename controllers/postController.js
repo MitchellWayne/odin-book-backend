@@ -42,6 +42,7 @@ exports.post_get = function(req, res){
   });
 };
 
+// TODO: Maybe define 'edited' boolean to model and force true on post_put
 exports.post_put = [
   body('title', 'Title must not be empty.').trim().isLength({min: 1}).escape(),
   body('text', 'Text content must not be empty.').trim().isLength({min: 1}).escape(),
@@ -67,6 +68,7 @@ exports.post_put = [
   }
 ];
 
+// TODO: Will need to check and delete relevant comments as well
 exports.post_delete = function(req, res){
   if(req.user._id.toString() !== req.params.userID) {
     return res.status(404).json({message: "user not authorized for different user endpoints"});
@@ -77,3 +79,6 @@ exports.post_delete = function(req, res){
     });
   }
 };
+
+// TODO: post_like_post and post_like_delete (public methods)
+//  Add or Remove req.user._id to req.params.userID.postID.likes[{...}]
