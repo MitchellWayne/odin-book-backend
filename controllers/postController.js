@@ -84,6 +84,7 @@ exports.post_delete = function(req, res){
   }
 };
 
+// /:userID/posts/:postID is the receiving end, logged in user appends their userID to the postID like list
 exports.post_like_post = function(req, res){
   Post.findByIdAndUpdate(req.params.postID, {$push: {likes: req.user._id}}, function(err){
     if (err) return res.status(404).json({err: err, message: "could not append current user to post likes"});
@@ -97,6 +98,3 @@ exports.post_like_delete = function(req, res){
     else return res.status(200).json({message: "successfully pulled user from post likes"});
   });
 };
-
-// TODO: post_like_post and post_like_delete (public methods)
-//  Add or Remove req.user._id to req.params.userID.postID.likes[{...}]
