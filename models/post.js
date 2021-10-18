@@ -8,6 +8,7 @@ let postSchema = new Schema({
   timestamp: {type: String, required: true},
   likes: [{type: Schema.Types.ObjectId, ref: 'User', required: false}],
   comments: [{type: Schema.Types.ObjectId, ref: 'Comment', required: false}],
+  edited: {type: Boolean, required: false},
 });
 
 module.exports = mongoose.model('Post', postSchema);

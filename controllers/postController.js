@@ -28,6 +28,7 @@ exports.post_post = [
         title: req.body.title,
         text: req.body.text,
         timestamp: Date.now(),
+        edited: false,
       }).save(saveErr => {
         if (saveErr) return res.status(404).json({err: saveErr});
         return res.status(201).json({message: "successfully made post"});
@@ -61,6 +62,7 @@ exports.post_put = [
         title: req.body.title,
         text: req.body.text,
         timestamp: Date.now(),
+        edited: true,
       }
 
       Post.findByIdAndUpdate(req.params.postID, post, {}, function(updateErr, updatedPost){
