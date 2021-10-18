@@ -85,11 +85,17 @@ exports.post_delete = function(req, res){
 };
 
 exports.post_like_post = function(req, res){
-
+  Post.findByIdAndUpdate(req.params.postID, {$push: {likes: req.user._id}}, function(err){
+    if (err) return res.status(404).json({err: err, message: "could not append current user to post likes"});
+    else return res.status(200).json({message: "successfully added user to post likes"});
+  });
 };
 
 exports.post_like_delete = function(req, res){
-
+  Post.findByIdAndUpdate(req.params.postID, {$pull: {likes: req.user._id}}, function(err){
+    if (err) return res.status(404).json({err: err, message: "could not pull current user from post likes"});
+    else return res.status(200).json({message: "successfully pulled user from post likes"});
+  });
 };
 
 // TODO: post_like_post and post_like_delete (public methods)
