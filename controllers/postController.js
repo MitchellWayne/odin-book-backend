@@ -46,7 +46,6 @@ exports.post_get = function(req, res){
   });
 };
 
-// TODO: Maybe define 'edited' boolean to model and force true on post_put
 exports.post_put = [
   body('title', 'Title must not be empty.').trim().isLength({min: 1}).escape(),
   body('text', 'Text content must not be empty.').trim().isLength({min: 1}).escape(),
@@ -83,6 +82,14 @@ exports.post_delete = function(req, res){
       else return res.status(200).json({message: "post successfully deleted"});
     });
   }
+};
+
+exports.post_like_post = function(req, res){
+
+};
+
+exports.post_like_delete = function(req, res){
+
 };
 
 // TODO: post_like_post and post_like_delete (public methods)

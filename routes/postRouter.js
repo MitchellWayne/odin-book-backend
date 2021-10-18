@@ -7,16 +7,15 @@ const post_controller = require('../controllers/postController');
 // Get post listing from user
 router.get('/', post_controller.postlist_get);
 
-// Create new post for user
+// Direct post routes
 router.post('/', passport.authenticate('jwt', {session: false}), post_controller.post_post);
-
-// Get post by ID
 router.get('/:postID', post_controller.post_get);
-
-// Update post by ID
 router.put('/:postID', passport.authenticate('jwt', {session: false}), post_controller.post_put);
-
-// Delete post by ID
 router.delete('/:postID', passport.authenticate('jwt', {session: false}), post_controller.post_delete);
+
+// Post likes
+router.post('/:postID/like', post_controller.post_like_post);
+router.delete('/:postID/like', post_controller.post_like_dellete);
+
 
 module.exports = router;
