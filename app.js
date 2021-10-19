@@ -8,6 +8,7 @@ const passport = require('passport');
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/userRouter');
 const postRouter = require('./routes/postRouter');
+const commentRouter = require('/coutes/commentRouter');
 
 require('dotenv').config();
 require('./passport');
@@ -39,6 +40,7 @@ app.use(passport.initialize());
 
 app.use('/', indexRouter);
 userRouter.use('/:userID/posts', postRouter);
+postRouter.use('/:postID/comments', commentRouter);
 app.use('/users', userRouter);
 
 // app.use('/users/:userID/posts', postRouter);
