@@ -2,6 +2,7 @@ const { body, validationResult } = require('express-validator');
 
 const Post = require('../models/post');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 exports.postlist_get = function(req, res){
   Post.find()
