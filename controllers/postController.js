@@ -73,7 +73,6 @@ exports.post_put = [
   }
 ];
 
-// TODO: Will need to check and delete relevant comments as well
 exports.post_delete = function(req, res){
   if(req.user._id.toString() !== req.params.userID) {
     return res.status(404).json({message: "user not authorized for different user endpoints"});
