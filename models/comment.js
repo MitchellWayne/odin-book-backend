@@ -6,6 +6,7 @@ let commentSchema = new Schema({
   timestamp: {type: String, required: true},
   likes: [{type: Schema.Types.ObjectId, ref: 'User', required: false}],
   author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+  post: {type: Schema.Types.ObjectId, ref: 'Post', required: true},
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
