@@ -1,3 +1,4 @@
+// Change to get comments for ONLY :postID
 exports.commentlist_get = function(req, res){
   Comment.find()
   .exec(function(err, commentList){
