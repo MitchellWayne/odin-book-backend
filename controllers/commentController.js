@@ -1,6 +1,5 @@
-// Change to get comments for ONLY :postID
 exports.commentlist_get = function(req, res){
-  Comment.find()
+  Comment.find({post: req.params.postID})
   .exec(function(err, commentList){
     if(err) return res.status(404).json({err: err});
     if(!commentList) return res.status(404).json({err: "could not retrieve comment list or comments DNE"});
