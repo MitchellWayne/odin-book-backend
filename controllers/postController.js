@@ -4,7 +4,6 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const Comment = require('../models/comment');
 
-// Change to get post of only userID
 exports.postlist_get = function(req, res){
   Post.find({author: req.params.userID})
   .exec(function(err, postList){
