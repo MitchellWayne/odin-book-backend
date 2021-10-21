@@ -6,7 +6,7 @@ const Comment = require('../models/comment');
 
 // Change to get post of only userID
 exports.postlist_get = function(req, res){
-  Post.find()
+  Post.find({author: req.params.userID})
   .exec(function(err, postList){
     if(err) return res.status(404).json({err: err});
     if(!postList) return res.status(404).json({err: "could not retrieve post list or posts DNE"});
