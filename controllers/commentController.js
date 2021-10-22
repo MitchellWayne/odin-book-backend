@@ -35,9 +35,10 @@ exports.comment_get = function(req, res){
   });
 };
 
-exports.comment_put = function(req, res){
+// Keep comments simple, maybe don't allow for editing pre-existing comments?
+// exports.comment_put = function(req, res){
 
-};
+// };
 
 exports.comment_delete = function(req, res){
 
