@@ -40,6 +40,7 @@ exports.comment_get = function(req, res){
 
 // };
 
+// Add check to see if comment author === req.user._id
 exports.comment_delete = function(req, res){
   Comment.findByIdAndDelete(req.params.commentID)
   .exec(function(err, comment){
