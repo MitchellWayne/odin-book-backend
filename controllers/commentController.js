@@ -41,5 +41,10 @@ exports.comment_get = function(req, res){
 // };
 
 exports.comment_delete = function(req, res){
-
+  Comment.findByIdAndDelete(req.params.commentID)
+  .exec(function(err, comment){
+    if (err) return res.status(404).json({err: err, message: "error retrieving comment"});
+    if (!comment) return res.status(404).json({err: "could not retive comment by ID or comment DNE"});
+    return res.status(200).json(comment);    
+  });
 };
