@@ -42,10 +42,17 @@ exports.comment_get = function(req, res){
 
 // Add check to see if comment author === req.user._id
 exports.comment_delete = function(req, res){
-  Comment.findByIdAndDelete(req.params.commentID)
+  Comment.findById(req.params.commentID)
   .exec(function(err, comment){
-    if (err) return res.status(404).json({err: err, message: "error retrieving comment"});
-    if (!comment) return res.status(404).json({err: "could not retive comment by ID or comment DNE"});
-    return res.status(200).json(comment);    
+    if (comment.author !== req.user._id.toString()){
+      return res.status(404).json({err: err, message: "user not authorized to delete other's comments"});
+    } else {
+      Comment.findByIdAndDelete(req.params.commentID)
+    .exec(function(err, comment){
+      if (err) return res.status(404).json({err: err, message: "error retrieving comment"});
+      if (!comment) return res.status(404).json({err: "could not retive comment by ID or comment DNE"});
+      return res.status(200).json(comment);    
+    });
+    }
   });
 };
