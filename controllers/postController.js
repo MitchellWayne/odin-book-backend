@@ -42,7 +42,7 @@ exports.post_get = function(req, res){
   Post.findById(req.params.postID)
   .exec(function(err, post){
     if (err) return res.status(404).json({err: err, message: "error retrieving post"});
-    if (!post) return res.status(404).json({err: "could not retive post by ID or post DNE"});
+    if (!post) return res.status(404).json({err: "could not retrieve post by ID or post DNE"});
     return res.status(200).json(post);    
   });
 };
