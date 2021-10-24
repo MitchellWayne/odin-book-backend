@@ -48,15 +48,16 @@ exports.comment_get = function(req, res){
 exports.comment_delete = function(req, res){
   Comment.findById(req.params.commentID)
   .exec(function(err, comment){
-    if (comment.author !== req.user._id.toString()){
+    if (err) return res.status(404).json({err: err, message: "error deleting comment"});
+    if (comment.author.toString() !== req.user._id.toString()){
       return res.status(404).json({err: err, message: "user not authorized to delete other's comments"});
     } else {
       Comment.findByIdAndDelete(req.params.commentID)
-    .exec(function(err, comment){
-      if (err) return res.status(404).json({err: err, message: "error retrieving comment"});
-      if (!comment) return res.status(404).json({err: "could not retrieve comment by ID or comment DNE"});
-      return res.status(200).json(comment);    
-    });
+      .exec(function(err, comment){
+        if (err) return res.status(404).json({err: err, message: "error retrieving comment"});
+        if (!comment) return res.status(404).json({err: "could not retrieve comment by ID or comment DNE"});
+        return res.status(200).json(message: "comment successfully deleted");    
+      });
     }
   });
 };
