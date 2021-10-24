@@ -8,7 +8,7 @@ const passport = require('passport');
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/userRouter');
 const postRouter = require('./routes/postRouter');
-const commentRouter = require('/coutes/commentRouter');
+const commentRouter = require('./routes/commentRouter');
 
 require('dotenv').config();
 require('./passport');
