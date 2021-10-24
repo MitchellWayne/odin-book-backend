@@ -14,8 +14,8 @@ router.put('/:postID', passport.authenticate('jwt', {session: false}), post_cont
 router.delete('/:postID', passport.authenticate('jwt', {session: false}), post_controller.post_delete);
 
 // Post likes
-router.post('/:postID/like', post_controller.post_like_post);
-router.delete('/:postID/like', post_controller.post_like_delete);
+router.post('/:postID/like', passport.authenticate('jwt', {session: false}), post_controller.post_like_post);
+router.delete('/:postID/like', passport.authenticate('jwt', {session: false}), post_controller.post_like_delete);
 
 
 module.exports = router;
