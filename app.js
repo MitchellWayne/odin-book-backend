@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const userRouter = require('./routes/userRouter');
@@ -37,6 +38,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+app.use(cors({
+  origin: 'http://localhost:3001'
+}));
 
 app.use('/', indexRouter);
 userRouter.use('/:userID/posts', postRouter);
