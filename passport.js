@@ -27,7 +27,8 @@ passport.use(
 //  to see if they have a verified Bearer Token
 passport.use(
   new JWTStrategy({
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    // jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: req => req.cookies.token,
     secretOrKey: process.env.JWT_SECRET,
   },
   function (jwtPayload, callback){
