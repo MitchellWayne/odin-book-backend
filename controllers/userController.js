@@ -249,7 +249,8 @@ exports.user_login_post = function(req, res, next){
     req.login(user, {session: false}, (err) => {
       if (err) res.send(err);
       const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '12h'});
-      return res.json({user, token});
+      // return res.json({user, token});
+      return res.json({token});
     });
   })(req, res, next);
 };
