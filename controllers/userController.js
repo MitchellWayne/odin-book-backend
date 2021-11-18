@@ -252,7 +252,8 @@ exports.user_login_post = function(req, res, next){
       res.cookie('token', token, { httpOnly: true});
 
       // return res.json({user, token});
-      return res.json({token});
+      // return res.json({token});
+      return res.json({message: "Successfully logged in"});
     });
   })(req, res, next);
 };
