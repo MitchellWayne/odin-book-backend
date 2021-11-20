@@ -2,6 +2,7 @@ const { body, validationResult } = require('express-validator');
 
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const User = require('../models/user');
 
 exports.postlist_get = function(req, res){
   Post.find({author: req.params.userID})
@@ -29,9 +30,12 @@ exports.post_post = [
         text: req.body.text,
         timestamp: Date.now(),
         edited: false,
-      }).save(saveErr => {
+      }).save((saveErr, post) => {
         if (saveErr) return res.status(404).json({err: saveErr});
-        return res.status(201).json({message: "successfully made post"});
+        User.findByIdAndUpdate(req.user._id, { $push: {posts: post._id}}, function(err){
+          if (err) return res.status(404).json({err: err, message: "created post but could not save to user"});
+          return res.status(201).json({message: "successfully made post"});
+        });
       });
     }
   }
