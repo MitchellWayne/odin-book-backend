@@ -84,7 +84,10 @@ exports.post_delete = function(req, res){
       if (err) return res.status(404).json({err: err, message: "could not delete post comments"});
       Post.findByIdAndDelete(req.params.postID, function(delError){
         if(delError) return res.status(404).json({err: delError, message: "failed to deleted post by id"});
-        else return res.status(200).json({message: "post successfully deleted"});
+        User.findByIdAndUpdate(req.user._id, { $pull: {posts: req.params.postID}}, function(err){
+          if (err) return res.status(404).json({err: err, message: "delete post but could not update user posts"});
+          else return res.status(200).json({message: "post successfully deleted"});
+        });
       });
     });
   }
