@@ -253,7 +253,7 @@ exports.user_login_post = function(req, res, next){
 
       // return res.json({user, token});
       // return res.json({token});
-      return res.json({message: "Successfully logged in"});
+      return res.json({message: "Successfully logged in", user: user});
     });
   })(req, res, next);
 };

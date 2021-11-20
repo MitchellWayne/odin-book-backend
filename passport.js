@@ -16,7 +16,14 @@ passport.use(
       if (err) return done(err);
       if (!theUser) return done(null, false, { message: "Incorrect username or password" });
       bcryptjs.compare(password, theUser.password, (err, res) => {
-        if (res) return done(null, theUser);
+        if (res) {
+          // Remove encrypted password from return object
+          // (Need to convert mongoose object to js object)
+          let safeUser = theUser.toObject();
+          delete safeUser.password;
+
+          return done(null, safeUser);
+        }
         else return done (null, false, { message: "Incorrect username or password" });
       });
     });
