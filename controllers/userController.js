@@ -104,7 +104,13 @@ exports.user_get = function(req, res){
   .exec(function (err, user){
     if (err) return res.status(404).json({err: err});
     if (!user) return res.status(404).json({err: "could not retive user by ID"});
-    return res.status(200).json(user);
+    else {
+      let safeUser = user.toObject();
+      delete safeUser.password;
+
+      return res.status(200).json(safeUser);
+    }
+    // return res.status(200).json(user);
   });
 };
 
