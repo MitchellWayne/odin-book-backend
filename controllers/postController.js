@@ -28,7 +28,7 @@ exports.post_post = [
         author: req.user._id,
         title: req.body.title,
         text: req.body.text,
-        timestamp: Date.now(),
+        timestamp: new Date(),
         edited: false,
       }).save((saveErr, post) => {
         if (saveErr) return res.status(404).json({err: saveErr});
