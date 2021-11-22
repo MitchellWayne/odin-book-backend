@@ -65,7 +65,7 @@ exports.post_put = [
       const post = {
         title: req.body.title,
         text: req.body.text,
-        timestamp: Date.now(),
+        timestamp: new Date(),
         edited: true,
       }
 

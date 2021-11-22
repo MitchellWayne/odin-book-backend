@@ -20,7 +20,7 @@ exports.comment_post = [
 
     const comment = new Comment({
       text: req.body.text,
-      timestamp: Date.now(),
+      timestamp: new Date(),
       author: req.user._id,
       post: req.params.postID,
     }).save(saveErr => {
