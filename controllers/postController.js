@@ -26,6 +26,7 @@ exports.post_post = [
 
       const post = new Post({
         author: req.user._id,
+        authorString: req.user.firstname + ' ' + req.user.lastname,
         title: req.body.title,
         text: req.body.text,
         timestamp: new Date(),
