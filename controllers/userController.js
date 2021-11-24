@@ -52,6 +52,14 @@ async function makeFriends(user1, user2, res){
 
 // APIs ---------------------
 
+// TODO
+// This can be optimized by moving the firstname / lastname exists checks outside of the query
+// 3 checks for 3 different queries
+// firstname && lastname
+// firstname
+// lastname
+// none of the above
+
 exports.userlist_get = function(req, res){
   const { firstname, lastname } = req.query;
   User.find()
@@ -60,8 +68,8 @@ exports.userlist_get = function(req, res){
     if(err) return res.status(404).json({err: err});
     if(!userList) return res.status(404).json({err: "could not retrieve user list or users DNE"});
 
-    if(firstname) userList = userList.filter(x => x.firstname === firstname);
-    if(lastname) userList = userList.filter(x => x.lastname === lastname);
+    if(firstname) userList = userList.filter(x => x.firstname.toLowerCase() === firstname.toLowerCase());
+    if(lastname) userList = userList.filter(x => x.lastname.toLowerCase() === lastname.toLowerCase());
 
     return res.status(200).json(userList);
   });
