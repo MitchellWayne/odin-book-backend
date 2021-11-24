@@ -34,6 +34,7 @@ async function areFriends(user1, user2){
   return (confirmU1 && confirmU2);
 }
 
+// Check if friend req from user2 exists on user1's model
 async function requestExists(user1, user2){
   let confirmed = await User.exists({ _id: user1, requests: { $elemMatch: {$eq: user2}}});
   console.log("Request exists: " + confirmed);
@@ -244,13 +245,13 @@ exports.user_request_post = async function(req, res){
   }
 };
 
-exports.user_request_delete = function(req, res){
+exports.user_request_delete = async function(req, res){
   if(req.user._id.toString() !== req.params.userID) {
     return res.status(404).json({message: "user not authorized for different user endpoints"});
   } else {
     if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
       if (userExists(req.body.friendID) && userExists(req.params.userID)){
-        if (await requestExists(req.body.friendID, req.params.userID)) {
+        if (await requestExists(req.params.userID, req.body.friendID)) {
           User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
             if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
             return res.status(200).json({message: "successfully pulled request from user"});
