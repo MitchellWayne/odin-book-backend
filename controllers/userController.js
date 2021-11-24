@@ -250,10 +250,12 @@ exports.user_request_delete = function(req, res){
   } else {
     if (isObjectId(req.body.friendID) && isObjectId(req.params.userID)){
       if (userExists(req.body.friendID) && userExists(req.params.userID)){
-        User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
-          if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
-          return res.status(200).json({message: "successfully pulled request from user"});
-        });
+        if (await requestExists(req.body.friendID, req.params.userID)) {
+          User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
+            if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
+            return res.status(200).json({message: "successfully pulled request from user"});
+          });
+        } else return res.status(404).json({message: "request does not exist"});
       } else return res.status(404).json({message: "issuing or receiving user dne"});
     } else return res.status(404).json({message: "invalid objectid formatting"});
   }
