@@ -8,6 +8,7 @@ let userSchema = new Schema({
   password: {type: String, required: true},
   friends: [{type: Schema.Types.ObjectId, ref: 'User', required: false}], // Array of user IDs
   requests: [{type: Schema.Types.ObjectId, ref: 'User', required: false}], // Same as above
+  requested: [{type: Schema.Types.ObjectId, ref: 'User', required: false}],
   posts: [{type: Schema.Types.ObjectId, ref: 'Post', required: false}],
 });
 

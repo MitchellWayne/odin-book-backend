@@ -236,7 +236,10 @@ exports.user_request_post = async function(req, res){
           if (!(await requestExists(req.body.friendID, req.params.userID))) {
             User.findByIdAndUpdate(req.body.friendID, { $push: {requests: req.params.userID}}, function(err){
               if (err) return res.status(404).json({err: err, message: "could not push to user requests"});
-              return res.status(200).json({message: "successfully pushed request to user"});
+              User.findByIdAndUpdate(req.params.userID, { $push: {requested: req.body.friendID}}, function(err){
+                if (err) return res.status(404).json({err: err, message: "pushed to requests but could not update requested"});
+                return res.status(200).json({message: "successfully pushed request to user"});
+              });
             });
           } else return res.status(404).json({message: "request already exists"});
         } else return res.status(404).json({message: "users are already friends"});
@@ -254,7 +257,10 @@ exports.user_request_delete = async function(req, res){
         if (await requestExists(req.params.userID, req.body.friendID)) {
           User.findByIdAndUpdate(req.params.userID, { $pull: {requests: req.body.friendID}}, function(err){
             if (err) return res.status(404).json({err: err, message: "could not pull from user requests"});
-            return res.status(200).json({message: "successfully pulled request from user"});
+            User.findByIdAndUpdate(req.body.friendID, { $pull: {requested: req.params.userID}}, function(err){
+              if (err) return res.status(404).json({err: err, message: "pulled from requests but could not update requested"});
+              return res.status(200).json({message: "successfully pulled request from user"});
+            });
           });
         } else return res.status(404).json({message: "request does not exist"});
       } else return res.status(404).json({message: "issuing or receiving user dne"});
