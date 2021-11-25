@@ -46,7 +46,10 @@ async function makeFriends(user1, user2, res){
     if (err) return res.status(404).json({err: err, message: `could not add ${user2} to ${user1}'s friends field`});
     User.findByIdAndUpdate(user2, {$push: {friends: user1}}, function(err){
       if (err) return res.status(404).json({err: err, message: `could not add ${user1} to ${user2}'s friends field`});
-      return res.status(200).json({message: `successfully made ${user1} and ${user2} friends`});
+      User.findByIdAndUpdate(user2, {$pull: {requested: user1}}, function(err){
+        if (err) return res.status(404).json({err: err, message: `could not remove ${user1} from ${user2}'s requested list`});
+        return res.status(200).json({message: `successfully made ${user1} and ${user2} friends`});
+      });
     });
   });
 }
