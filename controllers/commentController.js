@@ -22,6 +22,7 @@ exports.comment_post = [
       text: req.body.text,
       timestamp: new Date(),
       author: req.user._id,
+      authorString: req.user.firstname + ' ' + req.user.lastname,
       post: req.params.postID,
     }).save(saveErr => {
       if (saveErr) return res.status(404).json({err: saveErr});
