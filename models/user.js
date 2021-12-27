@@ -10,6 +10,8 @@ let userSchema = new Schema({
   requests: [{type: Schema.Types.ObjectId, ref: 'User', required: false}], // Same as above
   requested: [{type: Schema.Types.ObjectId, ref: 'User', required: false}],
   posts: [{type: Schema.Types.ObjectId, ref: 'Post', required: false}],
+  pfpURL: {type: String, required: false},
+  about: {type: String, required: false},
 });
 
 module.exports = mongoose.model('User', userSchema);
