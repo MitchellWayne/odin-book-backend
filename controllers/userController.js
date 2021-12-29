@@ -291,3 +291,13 @@ exports.user_logout_post = function(req, res){
   req.logout();
   return res.json({message: 'logged out successfully'});
 };
+
+exports.user_pfp_get = function(req, res){
+  User.findById(req.params.userID)
+  .select('pfpURL')
+  .exec(function(err, userpfp){
+    if(err) return res.status(400).json({err: err});
+    if(!user) return res.status(404).json({err: "could not retrieve user list or users DNE"});
+    return res.status(200).json(userpfp);
+  });
+}

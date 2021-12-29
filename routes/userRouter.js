@@ -25,4 +25,7 @@ router.delete('/:userID/requests', passport.authenticate('jwt', {session: false}
 router.post('/login', user_controller.user_login_post);
 router.post('/logout', passport.authenticate('jwt', {session: false}), user_controller.user_logout_post);
 
+// Misc
+router.get('/:userID/pfp', user_controller.user_pfp_get);
+
 module.exports = router;
