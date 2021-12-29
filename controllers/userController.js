@@ -297,7 +297,7 @@ exports.user_pfp_get = function(req, res){
   .select('pfpURL')
   .exec(function(err, userpfp){
     if(err) return res.status(400).json({err: err});
-    if(!user) return res.status(404).json({err: "could not retrieve user list or users DNE"});
+    if(!userpfp) return res.status(404).json({err: "could not retrieve user list or users DNE"});
     return res.status(200).json(userpfp);
   });
 }
