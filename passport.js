@@ -39,7 +39,7 @@ passport.use(
     secretOrKey: process.env.JWT_SECRET,
   },
   function (jwtPayload, callback){
-    return User.findOne({_id: jwtPayload.user._id})
+    return User.findOne({_id: jwtPayload.user_id})
     .then(user => { return callback(null, user); })
     .catch(err => { return callback(err); });
   }

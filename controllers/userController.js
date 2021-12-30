@@ -277,7 +277,7 @@ exports.user_login_post = function(req, res, next){
     if (err || !user) return res.status(400).json({err: err, message: info });
     req.login(user, {session: false}, (err) => {
       if (err) res.send(err);
-      const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '12h'});
+      const token = jwt.sign({user_id: user._id}, process.env.JWT_SECRET, {expiresIn: '12h'});
       res.cookie('token', token, { httpOnly: true});
 
       // return res.json({user, token});
