@@ -67,9 +67,19 @@ exports.post_put = [
         text: req.body.text,
         timestamp: new Date(),
         edited: true,
-      }
+      };
 
-      Post.findByIdAndUpdate(req.params.postID, post, {}, function(updateErr, updatedPost){
+      // Post.findByIdAndUpdate(req.params.postID, post, {}, function(updateErr, updatedPost){
+      //   if (updateErr) return res.status(404).json({err: updateErr});
+      //   else res.status(201).json({message: "post updated successfully"});
+      // });
+
+      const query = {
+        _id: req.params.postID,
+        author: req.user._id
+      };
+
+      Post.findOneAndUpdate(query, post, {}, function(updateErr, updatedPost){
         if (updateErr) return res.status(404).json({err: updateErr});
         else res.status(201).json({message: "post updated successfully"});
       });
