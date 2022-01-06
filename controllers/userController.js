@@ -131,7 +131,7 @@ exports.user_put = [
   body('firstname', 'First name must not be empty.').trim().isLength({min: 1}).escape(),
   body('lastname', 'Last name must not be empty.').trim().isLength({min: 1}).escape(),
   body('username', 'Username must not be empty.').trim().isLength({min: 1}).escape(),
-  body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
+  // body('password', 'Please enter a strong password of minimum length 8, at least one uppercase and lowercase letter, one number, and one symbol.').trim().isStrongPassword(),
 
   (req, res) => {
     if(req.user._id.toString() !== req.params.userID) {
@@ -147,7 +147,7 @@ exports.user_put = [
           firstname: req.body.firstname,
           lastname: req.body.lastname,
           username: req.body.username,
-          password: hashedPassword,
+          // password: hashedPassword,
         };
 
         User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
