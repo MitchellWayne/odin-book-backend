@@ -139,24 +139,37 @@ exports.user_put = [
       return res.status(404).json({message: "user not authorized for different user endpoints"});
     } else {
       const errors = validationResult(req);
+      if(!errors.isEmpty()) return res.status(404).json({err: errors});
 
-      bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
-        if(err) return res.status(404).json({err: err});
-        if(!errors.isEmpty()) return res.status(404).json({err: errors});
+      const user = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        username: req.body.username,
+        about: req.body.about,
+      };
 
-        const user = {
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          username: req.body.username,
-          about: req.body.about,
-          // password: hashedPassword,
-        };
-
-        User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
-          if (updateErr) return res.status(404).json({err: updateErr});
-          return res.status(201).json({message: "user updated successfully"});
-        });
+      User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
+        if (updateErr) return res.status(404).json({err: updateErr});
+        return res.status(201).json({message: "user updated successfully"});
       });
+
+      // bcryptjs.hash(req.body.password, 10, (err, hashedPassword) => {
+      //   if(err) return res.status(404).json({err: err});
+      //   if(!errors.isEmpty()) return res.status(404).json({err: errors});
+
+      //   const user = {
+      //     firstname: req.body.firstname,
+      //     lastname: req.body.lastname,
+      //     username: req.body.username,
+      //     about: req.body.about,
+      //     // password: hashedPassword,
+      //   };
+
+      //   User.findByIdAndUpdate(req.params.userID, user, {}, function(updateErr, updatedUser){
+      //     if (updateErr) return res.status(404).json({err: updateErr});
+      //     return res.status(201).json({message: "user updated successfully"});
+      //   });
+      // });
     }
   }
 ];
