@@ -24,10 +24,19 @@ exports.comment_post = [
       author: req.user._id,
       authorString: req.user.firstname + ' ' + req.user.lastname,
       post: req.params.postID,
-    }).save(saveErr => {
+    })
+    .save((saveErr, comment) => {
       if (saveErr) return res.status(404).json({err: saveErr});
-      return res.status(201).json({message: "successfully made comment"});
+      Post.findByIdAndUpdate(req.params.postID, { $push: {comments: comment._id}}, function(err){
+        if (err) return res.status(404).json({err: err, message: "created comment but could not save to post"});
+        return res.status(201).json({message: "successfully made comment"});
+      });
     });
+
+    // .save(saveErr => {
+    //   if (saveErr) return res.status(404).json({err: saveErr});
+    //   return res.status(201).json({message: "successfully made comment"});
+    // });
   }
 ];
 
