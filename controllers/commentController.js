@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 
 const Comment = require('../models/comment');
+const Post = require('../models/post');
 
 exports.commentlist_get = function(req, res){
   Comment.find({post: req.params.postID})
