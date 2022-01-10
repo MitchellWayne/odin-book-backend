@@ -316,3 +316,7 @@ exports.user_pfp_get = function(req, res){
     return res.status(200).json(userpfp);
   });
 }
+
+exports.user_pfpS3_get = function(req, res){
+  // TODO
+}
