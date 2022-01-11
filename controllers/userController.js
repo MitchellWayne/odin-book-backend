@@ -318,9 +318,24 @@ exports.user_pfp_get = function(req, res){
 };
 
 exports.user_pfpS3_get = function(req, res){
-  // TODO
+  // Confirm that the user is logged in and authorized.
+  // (Logged in user is auth for getting other user's pfp)
+
+  // Return S3 Link to user profile picture.
 };
 
 exports.user_pfpS3_post = function(req, res) {
-  // TODO
+  // Confirm that the user is logged in and authorized.
+  //  (User only has auth for their own endpoint)
+
+  // If the user already has a pfp, delete photo from bucket
+  //  using the pre-existing S3 Link.
+  // Then you should save the image to the bucket, as well
+  //  as update the bucket link to the user's MongoDB doc.
+
+  // If the user doesn't have a pfp, skip the delete step above.
+  
+  // Sometime before interacting w/ the S3 bucket, we'll need
+  //  to compress the image the user gives us and crop
+  //  as needed.
 };
