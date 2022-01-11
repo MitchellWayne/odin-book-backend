@@ -315,8 +315,12 @@ exports.user_pfp_get = function(req, res){
     if(!userpfp) return res.status(404).json({err: "could not retrieve user list or users DNE"});
     return res.status(200).json(userpfp);
   });
-}
+};
 
 exports.user_pfpS3_get = function(req, res){
   // TODO
-}
+};
+
+exports.user_pfpS3_post = function(req, res) {
+  // TODO
+};
