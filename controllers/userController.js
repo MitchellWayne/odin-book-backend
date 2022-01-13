@@ -323,10 +323,9 @@ exports.user_pfp_get = function(req, res){
 };
 
 exports.user_pfpS3_get = function(req, res){
-  // Confirm that the user is logged in and authorized.
-  // (Logged in user is auth for getting other user's pfp)
+  const key = req.params.key;
 
-  // Return S3 Link to user profile picture.
+  
 };
 
 exports.user_pfpS3_post = async function(req, res) {
@@ -342,8 +341,9 @@ exports.user_pfpS3_post = async function(req, res) {
 
     // If the user doesn't have a pfp, skip the delete step above.
     const s3result = await uploadFile(req.file);
+
     console.log(s3result);
-    return res.status(201).json({message: "uploaded user pfp"});
+    return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${result.Key}`});
   }
   
   // Sometime before interacting w/ the S3 bucket, we'll need

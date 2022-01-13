@@ -30,7 +30,7 @@ router.post('/logout', passport.authenticate('jwt', {session: false}), user_cont
 
 // Misc
 router.get('/:userID/pfp', user_controller.user_pfp_get);
-router.get('/:userID/pfpS3', passport.authenticate('jwt', {session: false}), user_controller.user_pfpS3_get);
+router.get('/:userID/pfpS3/:key', passport.authenticate('jwt', {session: false}), user_controller.user_pfpS3_get);
 router.post('/:userID/pfpS3', passport.authenticate('jwt', {session: false}), upload.single('pfp'), user_controller.user_pfpS3_post);
 
 module.exports = router;
