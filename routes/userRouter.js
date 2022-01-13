@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/ '});
+
 const user_controller = require('../controllers/userController');
 
 // Get users listing
@@ -28,6 +31,6 @@ router.post('/logout', passport.authenticate('jwt', {session: false}), user_cont
 // Misc
 router.get('/:userID/pfp', user_controller.user_pfp_get);
 router.get('/:userID/pfpS3', passport.authenticate('jwt', {session: false}), user_controller.user_pfpS3_get);
-router.post('/:userID/pfpS3', passport.authenticate('jwt', {session: false}), user_controller.user_pfpS3_post);
+router.post('/:userID/pfpS3', passport.authenticate('jwt', {session: false}), upload.single('pfp'), user_controller.user_pfpS3_post);
 
 module.exports = router;

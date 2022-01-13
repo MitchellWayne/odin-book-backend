@@ -3,6 +3,9 @@ const passport = require('passport');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/ '});
+
 const User = require('../models/user');
 const Post = require('../models/post');
 
@@ -327,13 +330,17 @@ exports.user_pfpS3_get = function(req, res){
 exports.user_pfpS3_post = function(req, res) {
   // Confirm that the user is logged in and authorized.
   //  (User only has auth for their own endpoint)
+  if(req.user._id.toString() !== req.params.userID) {
+    return res.status(404).json({message: "user not authorized for different user endpoints"});
+  } else {
+    // If the user already has a pfp, delete photo from bucket
+    //  using the pre-existing S3 Link.
+    // Then you should save the image to the bucket, as well
+    //  as update the bucket link to the user's MongoDB doc.
 
-  // If the user already has a pfp, delete photo from bucket
-  //  using the pre-existing S3 Link.
-  // Then you should save the image to the bucket, as well
-  //  as update the bucket link to the user's MongoDB doc.
+    // If the user doesn't have a pfp, skip the delete step above.
 
-  // If the user doesn't have a pfp, skip the delete step above.
+  }
   
   // Sometime before interacting w/ the S3 bucket, we'll need
   //  to compress the image the user gives us and crop
