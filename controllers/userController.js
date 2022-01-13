@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/ '});
 
-const { uploadFile } = require('../s3');
+const { uploadFile, getFileStream } = require('../s3');
 
 const User = require('../models/user');
 const Post = require('../models/post');
@@ -324,8 +324,9 @@ exports.user_pfp_get = function(req, res){
 
 exports.user_pfpS3_get = function(req, res){
   const key = req.params.key;
+  const readStream = getFileStream(key);
 
-  
+  readStream.pipe(res);
 };
 
 exports.user_pfpS3_post = async function(req, res) {
@@ -341,9 +342,12 @@ exports.user_pfpS3_post = async function(req, res) {
 
     // If the user doesn't have a pfp, skip the delete step above.
     const s3result = await uploadFile(req.file);
-
     console.log(s3result);
-    return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${result.Key}`});
+
+    User.findByIdAndUpdate(req.params.userID, {pfpURL: s3result.Key}, function(updateErr, updatedUser){
+      if (updateErr) return res.status(404).json({updateErr});
+      return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${s3result.Key}`});
+    });
   }
   
   // Sometime before interacting w/ the S3 bucket, we'll need
