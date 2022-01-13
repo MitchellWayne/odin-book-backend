@@ -339,7 +339,7 @@ exports.user_pfpS3_post = function(req, res) {
     //  as update the bucket link to the user's MongoDB doc.
 
     // If the user doesn't have a pfp, skip the delete step above.
-
+    return res.status(201).json({message: "uploaded user pfp"});
   }
   
   // Sometime before interacting w/ the S3 bucket, we'll need
