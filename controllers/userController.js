@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/ '});
 
+const { uploadFile } = require('../s3');
+
 const User = require('../models/user');
 const Post = require('../models/post');
 
@@ -327,7 +329,7 @@ exports.user_pfpS3_get = function(req, res){
   // Return S3 Link to user profile picture.
 };
 
-exports.user_pfpS3_post = function(req, res) {
+exports.user_pfpS3_post = async function(req, res) {
   // Confirm that the user is logged in and authorized.
   //  (User only has auth for their own endpoint)
   if(req.user._id.toString() !== req.params.userID) {
@@ -339,6 +341,8 @@ exports.user_pfpS3_post = function(req, res) {
     //  as update the bucket link to the user's MongoDB doc.
 
     // If the user doesn't have a pfp, skip the delete step above.
+    const s3result = await uploadFile(req.file);
+    console.log(s3result);
     return res.status(201).json({message: "uploaded user pfp"});
   }
   
