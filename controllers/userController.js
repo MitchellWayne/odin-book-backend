@@ -72,7 +72,7 @@ async function makeFriends(user1, user2, res){
 exports.userlist_get = function(req, res){
   const { namefilter } = req.query;
   User.find()
-  .select('firstname lastname username')
+  .select('firstname lastname username pfpURL')
   .exec(function(err, userList){
     if(err) return res.status(404).json({err: err});
     if(!userList) return res.status(404).json({err: "could not retrieve user list or users DNE"});
