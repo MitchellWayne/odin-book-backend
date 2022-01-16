@@ -3,9 +3,6 @@ const passport = require('passport');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/ '});
-
 const { uploadFile, getFileStream } = require('../s3');
 
 const User = require('../models/user');
