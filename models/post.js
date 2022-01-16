@@ -10,6 +10,7 @@ let postSchema = new Schema({
   likes: [{type: Schema.Types.ObjectId, ref: 'User', required: false}],
   comments: [{type: Schema.Types.ObjectId, ref: 'Comment', required: false}],
   edited: {type: Boolean, required: false},
+  imgURL: {type: String, required: false},
 });
 
 module.exports = mongoose.model('Post', postSchema);
