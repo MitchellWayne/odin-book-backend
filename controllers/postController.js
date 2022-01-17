@@ -20,6 +20,7 @@ exports.post_post = [
   body('text', 'Text content must not be empty.').trim().isLength({min: 1}).escape(),
   
   async (req, res) => {
+    console.log(req.file);
     if(req.user._id.toString() !== req.params.userID) {
       return res.status(404).json({message: "user not authorized for different user endpoints"});
     } else {
