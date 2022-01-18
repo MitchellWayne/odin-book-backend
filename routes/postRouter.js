@@ -21,7 +21,7 @@ router.post('/:postID/like', passport.authenticate('jwt', {session: false}), pos
 router.delete('/:postID/like', passport.authenticate('jwt', {session: false}), post_controller.post_like_delete);
 
 // Misc
-router.get('/:postID/pfpS3/:key', passport.authenticate('jwt', {session: false}), user_controller.post_imgS3_get);
+router.get('/:postID/imgS3/:key', passport.authenticate('jwt', {session: false}), user_controller.post_imgS3_get);
 
 
 
