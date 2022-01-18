@@ -140,3 +140,10 @@ exports.post_like_delete = function(req, res){
     else return res.status(200).json({message: "successfully pulled user from post likes"});
   });
 };
+
+exports.post_imgS3_get = function(req, res){
+  const key = req.params.key;
+  const readStream = getFileStream(key);
+
+  readStream.pipe(res);
+};
