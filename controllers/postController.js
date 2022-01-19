@@ -113,13 +113,19 @@ exports.post_delete = function(req, res){
   if(req.user._id.toString() !== req.params.userID) {
     return res.status(404).json({message: "user not authorized for different user endpoints"});
   } else {
-    Comment.deleteMany({post: req.params.postID}, function(err){
-      if (err) return res.status(404).json({err: err, message: "could not delete post comments, cannot proceed"});
-      Post.findByIdAndDelete(req.params.postID, function(delError){
-        if(delError) return res.status(404).json({err: delError, message: "failed to delete post by id, cannot proceed"});
-        User.findByIdAndUpdate(req.user._id, { $pull: {posts: req.params.postID}}, function(err){
-          if (err) return res.status(404).json({err: err, message: "successfully deleted post, but could not update user posts"});
-          else return res.status(200).json({message: "post successfully deleted"});
+    Post.findById({post: req.params.postID}, function(err, post){
+      if (err) return res.status(400).json({err: err, message: "error retrieving post"});
+      const s3result = await deleteFile(post.imgURL);
+      console.log("AWS S3 Image delete step for post_delete:")
+      console.log(s3result);
+      Comment.deleteMany({post: req.params.postID}, function(err){
+        if (err) return res.status(404).json({err: err, message: "could not delete post comments, cannot proceed"});
+        Post.findByIdAndDelete(req.params.postID, function(delError){
+          if(delError) return res.status(404).json({err: delError, message: "failed to delete post by id, cannot proceed"});
+          User.findByIdAndUpdate(req.user._id, { $pull: {posts: req.params.postID}}, function(err){
+            if (err) return res.status(404).json({err: err, message: "successfully deleted post, but could not update user posts"});
+            else return res.status(200).json({message: "post successfully deleted"});
+          });
         });
       });
     });
