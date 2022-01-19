@@ -4,7 +4,7 @@ const Post = require('../models/post');
 const Comment = require('../models/comment');
 const User = require('../models/user');
 
-const { uploadFile, getFileStream } = require('../s3');
+const { uploadFile, getFileStream, deleteFile } = require('../s3');
 
 exports.postlist_get = function(req, res){
   Post.find({author: req.params.userID})
