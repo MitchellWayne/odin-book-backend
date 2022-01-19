@@ -113,7 +113,7 @@ exports.post_delete = function(req, res){
   if(req.user._id.toString() !== req.params.userID) {
     return res.status(404).json({message: "user not authorized for different user endpoints"});
   } else {
-    Post.findById({post: req.params.postID}, function(err, post){
+    Post.findById({post: req.params.postID}, async function(err, post){
       if (err) return res.status(400).json({err: err, message: "error retrieving post"});
       const s3result = await deleteFile(post.imgURL);
       console.log("AWS S3 Image delete step for post_delete:")
