@@ -3,7 +3,7 @@ const passport = require('passport');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { uploadFile, getFileStream } = require('../s3');
+const { uploadFile, getFileStream, deleteFile } = require('../s3');
 
 const User = require('../models/user');
 const Post = require('../models/post');
