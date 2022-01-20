@@ -336,18 +336,25 @@ exports.user_pfpS3_post = async function(req, res) {
     //  using the pre-existing S3 Link.
     // Then you should save the image to the bucket, as well
     //  as update the bucket link to the user's MongoDB doc.
+    User.findById(req.params.userID)
+    .exec(function (err, user){
+      if (err) return res.status(400).json({err: err});
+      if (!user) return res.status(404).json({err: "could not retive user by ID"});
+      else {
+        if (user.pfpURL) {
+          const s3delete = await deleteFile(user.pfpURL);
+          console.log(s3delete);
+        }
 
-    // If the user doesn't have a pfp, skip the delete step above.
-    const s3result = await uploadFile(req.file);
-    console.log(s3result);
+        // If the user doesn't have a pfp, skip the delete step above.
+        const s3result = await uploadFile(req.file);
+        console.log(s3result);
 
-    User.findByIdAndUpdate(req.params.userID, {pfpURL: s3result.Key}, function(updateErr, updatedUser){
-      if (updateErr) return res.status(404).json({updateErr});
-      return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${s3result.Key}`});
-    });
+        User.findByIdAndUpdate(req.params.userID, {pfpURL: s3result.Key}, function(updateErr, updatedUser){
+          if (updateErr) return res.status(404).json({updateErr});
+          return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${s3result.Key}`});
+        });
+      }
+    });    
   }
-  
-  // Sometime before interacting w/ the S3 bucket, we'll need
-  //  to compress the image the user gives us and crop
-  //  as needed.
 };
