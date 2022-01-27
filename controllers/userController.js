@@ -337,7 +337,7 @@ exports.user_pfpS3_post = async function(req, res) {
     // Then you should save the image to the bucket, as well
     //  as update the bucket link to the user's MongoDB doc.
     User.findById(req.params.userID)
-    .exec(function (err, user){
+    .exec(async function (err, user){
       if (err) return res.status(400).json({err: err});
       if (!user) return res.status(404).json({err: "could not retive user by ID"});
       else {
