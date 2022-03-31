@@ -11,6 +11,7 @@ let postSchema = new Schema({
   comments: [{type: Schema.Types.ObjectId, ref: 'Comment', required: false}],
   edited: {type: Boolean, required: false},
   imgURL: {type: String, required: false},
+  pfpURL: {type: String, required: false},
 });
 
 module.exports = mongoose.model('Post', postSchema);

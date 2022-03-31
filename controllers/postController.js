@@ -36,7 +36,8 @@ exports.post_post = [
           text: req.body.text,
           timestamp: new Date(),
           edited: false,
-          imgURL: s3result.Key
+          imgURL: s3result.Key,
+          pfpURL: req.user.pfpURL,
         }).save((saveErr, post) => {
           if (saveErr) return res.status(404).json({err: saveErr});
           User.findByIdAndUpdate(req.user._id, { $push: {posts: post._id}}, function(err){
@@ -52,6 +53,7 @@ exports.post_post = [
           text: req.body.text,
           timestamp: new Date(),
           edited: false,
+          pfpURL: req.user.pfpURL,
         }).save((saveErr, post) => {
           if (saveErr) return res.status(404).json({err: saveErr});
           User.findByIdAndUpdate(req.user._id, { $push: {posts: post._id}}, function(err){
