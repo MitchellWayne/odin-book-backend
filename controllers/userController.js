@@ -352,7 +352,10 @@ exports.user_pfpS3_post = async function(req, res) {
 
         User.findByIdAndUpdate(req.params.userID, {pfpURL: s3result.Key}, function(updateErr, updatedUser){
           if (updateErr) return res.status(404).json({updateErr});
-          return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${s3result.Key}`});
+          Post.updateMany({author: req.user._id}, {pfpURL: s3result.Key}, function(postUpdateErr) {
+            if (postUpdateErr) return res.status(201).json({message: "uploaded user pfp but could not update posts"});
+            return res.status(201).json({message: "uploaded user pfp", imagePath: `/${req.user._id}/pfpS3/${s3result.Key}`});
+          })
         });
       }
     });    
