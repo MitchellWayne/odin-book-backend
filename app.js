@@ -38,15 +38,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
+
+// app.use(cors({
+//   origin: 'http://localhost:3000',
+//   credentials: true,
+// }));
+
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.use('/', indexRouter);
 userRouter.use('/:userID/posts', postRouter);
 postRouter.use('/:postID/comments', commentRouter);
 app.use('/users', userRouter);
+
+// Anything that doesn't match the above, send back client index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 
 // app.use('/users/:userID/posts', postRouter);
 
