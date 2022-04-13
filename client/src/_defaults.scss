@@ -1,0 +1,80 @@
+// This is a partial file
+// The leading underscore in the name tells Sass to NOT generate a CSS file for this.
+
+// Colors
+$primary-color: #eeb55a;
+$primary-darken: #d2a04f;
+$primary-weak: #e9ddca;
+$primary-black: #1e1e1e;
+$primary-gray: #969696;
+$primary-white: #FFFFFF;
+$primary-offwhite: #f2f2f2;
+$primary-error: #c70000;
+$primary-success: #338530;
+
+// Font Family
+$font-family: (
+  "teko": ('Teko', sans-serif)
+);
+
+// Font Weight
+$font-weight: (
+  "regular": 400,
+  "bold": 700
+);
+
+// Breakpoints
+$desktop: 768px;
+
+// Functions should be used to compute and return values
+@function fFamily($family-name) {
+  @return map-get($font-family, $family-name);
+}
+
+@function fWeight($weight-name) {
+  @return map-get($font-weight, $weight-name);
+}
+
+// Mixins should define styles
+@mixin flexCenter($direction) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+
+  // Used like so
+  // .main {
+  //     @include flexCenter(row);
+  // }
+}
+
+@mixin theme($light-theme: true) {
+  @if $light-theme {
+    background: lighten($primary-black, 40%);
+  }
+}
+
+@mixin desktop {
+  @media only screen and (min-width: $desktop) and (orientation: landscape) and (min-aspect-ratio: 16/14){
+    @content;
+  }
+}
+
+@mixin tekoFont($fontsize) {
+  font-family: fFamily(teko);
+  font-weight: fWeight($fontsize);
+}
+
+@mixin displayFlex($dir) {
+  display: flex;
+  flex-direction: $dir;
+}
+
+body {
+  font-size: 1vh;
+  background-color: $primary-black;
+}
+
+a {
+  text-decoration: none;
+}

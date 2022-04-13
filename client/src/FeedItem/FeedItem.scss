@@ -1,0 +1,340 @@
+@use '../defaults' as d;
+
+.FeedItem {
+  $f: &;
+  margin: 1vh 0;
+  padding-bottom: 1vh;
+
+  width: 90vw;
+  font-size: 3em;
+
+  background-color: d.$primary-white;
+  color: d.$primary-black;
+  box-shadow: .1em .1em 0 d.$primary-darken;
+
+  animation-duration: 1s;
+  animation-name: slideright;
+  animation-fill-mode: backwards;
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: 100ms * $i;
+    }
+  }
+
+  &__header {
+    @include d.tekoFont(regular);
+    @include d.displayFlex(row);
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    background-color: d.$primary-color;
+
+    box-shadow: 0 2px 2px d.$primary-gray;
+
+    .flexWrapper {
+      @include d.displayFlex(row);
+      align-items: center;
+
+      padding: .5%;
+
+      .iconWrapper {
+        aspect-ratio: 1/1;
+        display: flex;
+        width: 2em;
+      }
+    }
+
+    #{$f}__profIcon {
+      height: 2em;
+      width: 2em;
+    }
+
+    #{$f}__icon {
+      height: 100%;
+      width: 100%;
+    }
+
+    #{$f}__icon--pfp {
+      border-radius: 100%;
+    }
+
+    #{$f}__author {
+      margin: 0 1vw 0 .5vw;
+      &:visited {
+        color: d.$primary-black;
+      }
+    }
+
+    #{$f}__timestamp {
+      margin: 0 1vw 0 0;
+      color: d.$primary-black;
+    }
+  }
+
+  &__title {
+    @include d.tekoFont(bold);
+    padding: 1vh 1vh 0 1vh;
+    text-align: left;
+  }
+
+  &__text {
+    padding: 0 1vh 1vh 1vh;
+    font-size: .75em;
+    text-align: left;
+  }
+
+  &__stats {
+    padding: 0 1vh;
+    font-size: .5em;
+  }
+
+  &__commentList {
+    margin: 0 1vh 0 1vh;
+    box-shadow: 0 -.1em 0 d.$primary-color;
+    // background-color: d.$primary-gray;
+    // border: .1em solid d.$primary-gray;
+    // border-bottom: none;
+  }
+
+  &__likes {
+    display: flex;
+    align-items: center;
+  }
+
+  &__likeCount {
+    margin: 0 0 0 .5vw;
+    @include d.tekoFont(regular);
+    font-size: 1.5em;
+  }
+
+  &__imgContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 1vh;
+    padding: 1vh;
+    // box-shadow: .1em .1em .2em d.$primary-black;
+    // background-color: d.$primary-black;
+  }
+  &__img {
+    max-width: 90%;
+    max-height: 20em;
+
+    box-shadow: .1em .1em .2em d.$primary-black;
+    background-color: d.$primary-black;
+  }
+}
+
+.ThumbUp {
+  &__container {
+    margin-top: 0;
+    padding: 0;
+
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      fill: d.$primary-success;
+    }
+
+    &:active {
+      transform: scale(.9);
+    }
+
+    &--liked {
+      &:hover {
+        fill: d.$primary-error;
+      }
+    }
+  }
+}
+
+.toggleComments {
+  padding: 0 0 0 2px;
+  margin: 1vh 0 0 0;
+
+  background-color: transparent;
+  border: none;
+  @include d.tekoFont(bold);
+  font-size: 1em;
+
+  &:hover {
+    color: d.$primary-color;
+  }
+
+  &:active {
+    transform: scale(.95);
+  }
+}
+
+.commentForm {
+  display: flex;
+  padding-top: 1vh;
+  // margin-bottom: 1vh;
+  height: 4vh;
+
+  &__input {
+    padding: 0 0 0 1vh;
+    border: 1px solid d.$primary-color;
+    width: 80%;
+    font-size: .75em;
+  }
+
+  &__submit {
+    border: 1px solid d.$primary-color;
+    border-left: none;
+    width: 20%;
+    background-color: lighten(d.$primary-color, 2);
+
+    @include d.tekoFont(bold);
+    font-size: .9em;
+
+    &:hover {
+      text-shadow: 1px 1px 0 d.$primary-white;
+    }
+
+    &:active {
+      font-size: .85em;
+    }
+  }
+}
+
+.commentList {
+  // margin-top: 1vh;
+  max-height: 6em;
+  overflow: scroll;
+}
+
+.sampleComment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: d.$primary-white;
+  font-size: .8em;
+
+  border-left: .25em solid d.$primary-color;
+  margin-top: 1%;
+  // box-shadow: 2px 0 0 d.$primary-color;
+
+  &__text {
+    padding: .25vh .5vw;
+    // padding: 0 0 .75vh .5vw;
+  }
+
+  &__author {
+    @extend .sampleComment__text;
+  }
+
+  &:hover {
+    background-color: d.$primary-offwhite;
+  }
+}
+
+.EditItem {
+  width: 90vw;
+  font-size: 3em;
+
+  margin: 2vh 0 0 0;
+
+  background-color: d.$primary-white;
+  color: d.$primary-black;
+  box-shadow: .1em .1em 0 d.$primary-darken;
+
+  &__header {
+    @include d.tekoFont(regular);
+    @include d.displayFlex(row);
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    background-color: d.$primary-color;
+
+    box-shadow: 0 2px 2px d.$primary-gray;
+  }
+
+  &__profIcon {
+    height: 2em;
+  }
+
+  &__icon {
+    height: 100%;
+    width: 100%;
+  }
+
+  &__author {
+    margin: 0 1vw 0 1vh;
+  }
+
+  &__timestamp {
+    margin: 0 1vw 0 0;
+    color: d.$primary-black;
+  }
+
+  &__title {
+    @include d.tekoFont(bold);
+    margin: 1vh 1vw;
+    padding: 0 1vh 0 1vh;
+    font-size: .75em;
+  }
+
+  &__text {
+    margin: 1vh 1vw;
+    padding: 0 1vh 1vh 1vh;
+    font-size: .75em;
+    resize: none;
+    font-size: .75em;
+  }
+
+  &__editBtn {
+    background-color: transparent;
+    border: none;
+
+    @include d.tekoFont(bold);
+    font-size: 1em;
+
+    &:hover {
+      color: d.$primary-white;
+      text-shadow: 1px 1px 0 d.$primary-black;
+    }
+
+    &:active {
+      transform: scale(.9);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 1vh 0 0 0;
+  }
+
+  &__formErrors {
+    padding-top: 1vh;
+    margin: 0;
+    list-style: circle;
+
+    @include d.tekoFont(regular);
+    font-size: 1em;
+    color: d.$primary-error;
+  }
+}
+
+// Desktop Breakpoints --------------------------
+
+@include d.desktop {
+  .FeedItem {
+    width: 50vw;
+  }
+}
+
+@keyframes slideright {
+  from {
+    margin-right: 200vw;
+  }
+
+  to {
+    margin-right: 0;
+  }
+}

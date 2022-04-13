@@ -1,0 +1,140 @@
+@use '../defaults' as d;
+
+.CreatePost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 7vh 0 0 0;
+
+  .Posttitle {
+    margin: calc(3vh + 2px);
+    color: d.$primary-white;
+    @include d.tekoFont(bold);
+    font-size: 7em;
+  }
+
+  .Postform {
+    display: flex;
+    flex-direction: column;
+    width: 90vw;
+    font-size: 3em;
+
+    background-color: d.$primary-white;
+    color: d.$primary-black;
+    box-shadow: .1em .1em 0 d.$primary-darken;
+
+    &__formErrors {
+      padding-top: 1vh;
+      margin: 0;
+      list-style: circle;
+
+      @include d.tekoFont(regular);
+      font-size: 1em;
+      color: d.$primary-error;
+    }
+
+    &__header {
+      @include d.tekoFont(regular);
+      @include d.displayFlex(row);
+      align-items: center;
+
+      width: 100%;
+      background-color: d.$primary-color;
+
+      box-shadow: 0 2px 2px d.$primary-gray;
+    }
+
+    &__profIcon {
+      height: 2em;
+    }
+
+    &__icon {
+      height: 100%;
+      width: 100%;
+    }
+
+    &__author {
+      margin: .5vh 1vw 0 0;
+    }
+
+    &__inputs {
+      display: flex;
+      flex-direction: column;
+      padding: 1vh;
+    }
+
+    &__title {
+      @include d.tekoFont(bold);
+      font-size: 1em;
+      // margin: 0 0 1vh 0;
+      padding: .75vh 1vh 0 1vh;
+      width: auto;
+    }
+
+    &__text {
+      height: 20vh;
+      font-size: 1em;
+      padding: 1vh;
+      font-size: .75em;
+      resize: none;
+
+      border-radius: 0;
+      border: solid 1px d.$primary-black;
+      border-bottom: none;
+
+    }
+
+    &__submit {
+      @include d.tekoFont(regular);
+      font-size: 1.75em;
+      text-align: center;
+
+      color: d.$primary-white;
+      text-shadow: 1px 1px 0 d.$primary-gray;
+
+      background-color: d.$primary-color;
+      border: solid 1px d.$primary-black;
+      border-top: none;
+
+      &:hover {
+        background-color: d.$primary-darken;
+      }
+  
+      &:active {
+        background-color: darken(d.$primary-darken, 10);
+      }
+    }
+
+    &__image {
+      display: flex;
+      padding-left: .25vh;
+      @include d.tekoFont(regular);
+      font-size: .75em;
+      margin: .25em 0 .2em 0;
+      input {
+        margin-left: 1em;
+      }
+    }
+  }
+}
+
+@include d.desktop {
+  .CreatePost {
+      &--navActive {
+        margin-right: 25%;
+      }
+
+      .Postform {
+        width: 50vw;
+
+        &__title {
+          width: 30%;
+        }
+
+        &__formErrors {
+          position: sticky;
+          right: 1vw;
+        }
+      }
+  }
+}

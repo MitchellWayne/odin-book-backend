@@ -1,0 +1,8 @@
+@use './defaults' as d;
+
+body {
+  margin: 0;
+  padding: 0;
+
+  background-color: d.$primary-black;
+}

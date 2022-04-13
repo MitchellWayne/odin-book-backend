@@ -1,0 +1,30 @@
+@use '../defaults' as d;
+
+.Feed {
+  margin-top: 8vh;
+
+  @include d.displayFlex(column);
+  align-items: center;
+
+  .loadingMsg {
+    @include d.tekoFont(bold);
+    font-size: 8em;
+    color: d.$primary-white;
+    margin-top: 22vh;
+    animation: loading 1s linear infinite;
+  }
+}
+
+@include d.desktop {
+  .Feed {
+    &--navActive {
+      margin-right: 25%;
+    }
+  }
+}
+
+@keyframes loading {
+  50% {
+    color: d.$primary-color;
+  }
+}
