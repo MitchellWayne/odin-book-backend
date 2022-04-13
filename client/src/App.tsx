@@ -1,7 +1,7 @@
 import './App.scss';
 
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { PrivateRoute, ReversePrivateRoute } from './Router/PrivateRoutes';
+import { PrivateRoute, ReversePrivateRoute } from './router/PrivateRoutes';
 
 import Login from './Login';
 import Signup from './Signup';
