@@ -1,0 +1,262 @@
+@use '../defaults' as d;
+
+.Header {
+  position: fixed;
+  top: 0vh;
+
+  height: 7vh;
+  width: 100vw;
+
+  @include d.displayFlex(row);
+  justify-content: space-between;
+  align-items: center;
+
+  color: d.$primary-white;
+
+  background-color: d.$primary-color;
+  box-shadow: 0 2px 0 d.$primary-darken;
+  z-index: 20;
+}
+
+.headerTextLogo {
+  margin: 1vh 0 .5vh 1vh;
+  padding: 0.5vh 1vw 0 1vw;
+
+  @include d.tekoFont(bold);
+
+  font-size: 5em;
+  color: d.$primary-white;
+  text-shadow: 2px 2px 0 d.$primary-darken;
+
+  text-decoration: none;
+
+  &:focus {
+    outline: transparent;
+  }
+
+  &:focus-visible {
+    color: darken(d.$primary-white, 10%);
+    text-shadow: 4px 4px 2px d.$primary-darken;
+    outline: d.$primary-black inset 3px;
+    outline-offset: -1vh;
+  }
+}
+
+.headerNavToggle {
+  @include d.flexCenter(row);
+
+  position: fixed;
+  bottom: 2.5vh;
+  right: 2.5vh;
+
+  height: 12.5vh;
+  width: 12.5vh;
+
+  padding: 0;
+  margin: 0 10px;
+
+  border: none;
+  border-radius: 100%;
+  background-color: d.$primary-color;
+  box-shadow: .2em .2em .4em  d.$primary-black;
+
+
+  &:focus {
+    outline: transparent;
+  }
+  
+  &:focus-visible {
+    outline: d.$primary-black solid 3px;
+  }
+
+  &:active {
+    transform: scale(.9);
+  }
+
+  .profIconWrapper {
+    width: 10vh;
+
+    .profIcon {
+      width: 100%;
+      height: 100%;
+      fill: d.$primary-white;
+    }
+  }
+}
+
+.headerUtils {
+  display: flex;
+  flex-direction: row;
+  margin: 0;
+  z-index: 10;
+}
+
+@include d.desktop{
+  .headerNavToggle {
+    position: static;
+
+    height: 6vh;
+    width: 6vh;
+
+    background-color: transparent;
+    box-shadow: none;
+
+    .profIconWrapper {
+      .profIcon {
+        &:hover {
+          fill: d.$primary-black;
+        }
+      }
+    }
+  }
+
+  .headerUtils {
+    .headerSearchbar {
+      width: 25vw;
+    }
+  }
+}
+
+
+
+// -------------------------------------------------------------
+// .Header {
+//   position: sticky;
+//   top: 0vh;
+  
+//   height: 7vh;
+//   width: 100vw;
+
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: center;
+
+//   color: d.$primary-white;
+
+//   background-color: d.$primary-color;
+//   box-shadow: 0 2px 0 d.$primary-darken;
+//   z-index: 1;
+// }
+
+// .headerTextLogo {
+//   margin: .5vh 0 .5vh 0;
+//   padding: 0.5vh 1vw 0 1vw;
+
+//   @include d.tekoFont(bold);
+
+//   font-size: 2em;
+//   color: d.$primary-white;
+//   text-shadow: 2px 2px 0 d.$primary-darken;
+
+//   text-decoration: none;
+
+//   &:focus {
+//     outline: transparent;
+//   }
+
+//   &:focus-visible {
+//     color: darken(d.$primary-white, 10%);
+//     text-shadow: 4px 4px 2px d.$primary-darken;
+//     outline: d.$primary-black inset 3px;
+//     outline-offset: -1vh;
+//   }
+// }
+
+// .headerUtils {
+//   display: flex;
+//   flex-direction: row;
+
+//   .headerSearchbar {
+//     display: flex;
+//     width: 20vw;
+//     background-color: d.$primary-white;
+//     box-shadow: 2px 2px 0 d.$primary-darken;
+
+//     .headerSearchbarInput {
+//       width: 80%;
+    
+//       padding: 0 0 0 14px;
+//       background-color: transparent;
+//       border: transparent;
+  
+//       &:focus {
+//         outline: none;
+//       }
+  
+//       &:focus-visible {
+//         outline: d.$primary-black solid 3px;
+//         outline-offset: -3px;
+//       }
+//     }
+  
+//     .headerSearchbarSubmit {
+//       width: 20%;
+//       height: 5vh;
+//       padding: 0;
+//       background-color: transparent;
+//       border: transparent;
+//       color: d.$primary-darken;
+  
+//       &:focus {
+//         outline: transparent;
+//       }
+      
+//       &:focus-visible {
+//         outline: d.$primary-black solid 3px;
+//         outline-offset: -3px;
+//       }
+
+//       .submitIcon {
+//         width: 100%;
+//         height: 100%;
+//         fill: d.$primary-gray;
+
+//         &:hover {
+//           fill: lighten(d.$primary-gray, 20%);
+//         }
+        
+//         &:active {
+//           transform: scale(.9);
+//         }
+//       }
+//     }
+//   }
+
+//   .headerProfileOptions {
+//     height: 5vh;
+  
+//     padding: 0;
+//     margin: 0 10px;
+  
+//     border: none;
+//     border-radius: 100%;
+//     background-color: transparent;
+
+//     &:focus {
+//       outline: transparent;
+//     }
+    
+//     &:focus-visible {
+//       outline: d.$primary-black solid 3px;
+//     }
+
+//     .profIconWrapper {
+//       width: 5vh;
+
+//       .profIcon {
+//         width: 100%;
+//         height: 100%;
+//         fill: d.$primary-black;
+
+//         &:hover {
+//           fill: lighten(d.$primary-black, 20%);
+//         }
+        
+//         &:active {
+//           transform: scale(.9);
+//         }
+//       }
+//     }
+//   }
+// }

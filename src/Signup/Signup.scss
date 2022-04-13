@@ -1,0 +1,156 @@
+@use '../defaults' as d;
+
+.Signup {
+  background-color: d.$primary-black;
+
+  height: 100vh;
+  @include d.flexCenter(row);
+
+  &__home {
+    position: absolute;
+    top: 1vh;
+    left: 2vh;
+
+    @include d.tekoFont(bold);
+    color: d.$primary-black;
+    font-size: 4em;
+  }
+
+  &__form {
+    @include d.displayFlex(column);
+    align-items: center;
+
+    padding-top: 15vh;
+    width: 100vw;
+    height: 100vh;
+    background-color: d.$primary-white;
+    box-shadow: 4px 4px 0 d.$primary-darken;
+
+    &--center {
+      justify-content: center;
+    }
+  }
+
+  &__formTitle {
+    margin: 5% 0 0 0;
+
+    @include d.tekoFont(bold);
+    font-size: 5em;
+  
+    color: d.$primary-color;
+    text-shadow: 2px 2px 0 d.$primary-darken;
+
+    &--nomargin {
+      margin: 0;
+    }
+  }
+
+  &__input {
+    width: 80%;
+    height: 5%;
+
+    margin: 2.5% 0 0 0;
+    padding: 1% 0 0 5%;
+
+    border-radius: 2px;
+    border: 1px solid d.$primary-darken;
+    /* box-shadow: 1px 1px 0 d.$primary-gray; */
+
+    @include d.tekoFont(regular);
+    font-size: 3em;
+
+    &::placeholder {
+      color: d.$primary-gray;
+    }
+  }
+
+  .separator {
+    margin: 5% 0;
+    width: 90%;
+  
+    text-align: center;
+    @include d.tekoFont(bold);
+    font-size: 4em;
+    font-style: italic;
+  
+    color:d.$primary-gray;
+  
+    border: none;
+    border-top: 1px solid d.$primary-gray;
+  
+    overflow: visible;
+  
+    &::after {
+      background-color: d.$primary-white;
+  
+      padding: 0 4px;
+      position: relative;
+      top: -.7em;
+    }
+  }
+
+  &__createAccount {
+    width: 75%;
+    height: 7%;
+
+    // margin: 0 0 5% 0;
+    padding: 0.5% 0 0 0;
+
+    @include d.tekoFont(regular);
+    font-size: 4em;
+    text-align: center;
+
+    color: d.$primary-white;
+    text-shadow: 1px 1px 0 d.$primary-gray;
+
+    background-color: d.$primary-darken;
+    border: none;
+    box-shadow: 2px 2px 0 d.$primary-gray;
+
+    &:hover {
+      background-color: d.$primary-color;
+    }
+
+    &:active {
+      transform: scale(.97);
+    }
+
+    &:focus-visible {
+      outline: d.$primary-black solid 2px;
+    }
+  }
+
+  &__formErrors {
+    width: 60%;
+    margin: 2.5% 0 0 0;
+    padding: 0 0 0 5%;
+
+    color: d.$primary-error;
+    font-size: 2em;
+    font-weight: d.fWeight(bold);
+    // @include d.tekoFont(regular);
+    text-align: start;
+  }
+}
+
+@include d.desktop {
+  .Signup {
+    &__home {
+      color: d.$primary-white;
+    }
+
+    &__formTitle {
+      font-size: 6em;
+    }
+
+    &__form {
+      padding-top: 0;
+      width: 40vw;
+      height: 85vh;
+    }
+
+    &__input {
+      width: 70%;
+    }
+  }
+}

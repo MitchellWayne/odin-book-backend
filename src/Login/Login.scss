@@ -1,0 +1,208 @@
+@use '../defaults' as d;
+
+.Login {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  background-color: d.$primary-black;
+  font-size: 2.5vh;
+
+  .loginContainer {
+    height: 85vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  
+    margin: 15vh 0 0 0;
+  }
+}
+
+/* Auth -------------------------------------- */
+.loginAuthBox {
+  justify-self: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 70vh;
+  width: 55vh;
+
+  background-color: d.$primary-white;
+  box-shadow: 4px 4px 0 d.$primary-darken;
+
+  margin: 0 5%;
+
+  .formTitle {
+    margin: 5vh 0 0 0;
+  
+    @include d.tekoFont(bold);
+    font-size: 3em;
+  
+    color: d.$primary-color;
+    text-shadow: 2px 2px 0 d.$primary-darken;
+  }
+
+  #{&}Input {
+    width: 75%;
+    height: 7%;
+
+    margin: 5% 0 0 0;
+    padding: 1% 0 0 5%;
+
+    border-radius: 2px;
+    border: 1px solid d.$primary-color;
+    /* box-shadow: 1px 1px 0 d.$primary-gray; */
+
+    @include d.tekoFont(regular);
+    font-size: 1.25em;
+
+    &::placeholder {
+      color: d.$primary-gray;
+    }
+  }
+
+  .loginEmail {
+    margin: 0 0 0 0;
+  }
+
+  .formButton {
+    // Extend copies the styles from the target element
+    margin: 4% 0 0 0;
+    padding: 1% 0 0 0;
+    text-align: center;
+
+    width: 75%;
+    height: 7%;
+
+    @include d.tekoFont(regular);
+    font-size: 1.25em;
+
+    color: d.$primary-white;
+
+    background-color: d.$primary-color;
+    box-shadow: 2px 2px 0 d.$primary-darken;
+
+    border: none; 
+
+    &:hover {
+      cursor: pointer;
+      background-color: d.$primary-darken;
+      box-shadow: 2px 2px 0 d.$primary-color;
+    }
+
+    &:active {
+      transform: scale(.97);
+    }
+
+    &:focus-visible {
+      outline: d.$primary-black solid 2px;
+    }
+  }
+
+  .login {
+    margin: 5% 0 10% 0;
+    padding: 0.5% 0 0 0;
+  }
+
+  .separator {
+    margin: -2% 0 -3% 0;
+    width: 90%;
+  
+    text-align: center;
+    @include d.tekoFont(bold);
+    font-size: 1em;
+    font-style: italic;
+  
+    color:d.$primary-gray;
+  
+    border: none;
+    border-top: 1px solid d.$primary-gray;
+  
+    overflow: visible;
+  
+    &::after {
+      background-color: d.$primary-white;
+      content: 'or';
+  
+      padding: 0 4px;
+      position: relative;
+      top: -.7em;
+    }
+  }
+
+  .loginErrors {
+    margin: 5% 0 0 0;
+    @include d.tekoFont(regular);
+    font-size: 1.25em;
+    color: d.$primary-error;
+  }
+}
+
+/* Logo -------------------------------------- */
+.loginTextLogo {
+  display: none;
+  flex-direction: column;
+
+  margin: 15vh 0 0 10vw;
+
+  font-family: d.fFamily(teko);
+
+  .loginTitle {
+    font-weight: d.fWeight(bold);
+    font-size: 6em;
+  
+    color: d.$primary-darken;
+  }
+  
+  .loginSubtext {
+    position: relative;
+    bottom: 1em;
+  
+    font-size: 3em;
+    color: d.$primary-white;
+  }
+}
+
+/* Desktop Breakpoint ------------------------ */
+@include d.desktop{
+  #textLogo {
+    display: flex;
+    margin-right: 5em;
+
+    .loginTitle {
+      font-size: 8vw;
+      margin: 0;
+    }
+    .loginSubtext {
+      font-size: 3vw;
+      margin: 0;
+    }
+  }
+
+  .loginAuthBox {
+    margin-left: 5em;
+    
+    .formTitle {
+      display: none;
+    }
+  
+    #loginEmail{
+      margin: 20% 0 0 0;
+    }
+  
+    #authBox {
+      margin: 0 0 0 10vw;
+    }
+  
+    .loginContainer {
+      // width: 50vw;
+      justify-content: flex-start;
+    }
+
+    .separator {
+      margin: 1% 0 0 0;
+    }
+  }
+}

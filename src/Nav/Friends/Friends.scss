@@ -1,0 +1,221 @@
+@use '../../defaults' as d;
+
+.FriendList {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  
+  height: calc(100% - 1vh);
+  width: calc(100% - 1vh);
+  padding: 1vh;
+
+  &__return {
+    margin: 0 1vh;
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+
+    button {
+      padding: 0;
+      @include d.tekoFont(bold);
+      font-size: 3em;
+      background-color: transparent;
+      border: none;
+
+      &:hover {
+        color: d.$primary-color;
+      }
+
+      &:active {
+        transform: scale(.9);
+      }
+    }
+  }
+
+  // &__requests {
+
+  // }
+
+  // &__requestsTitle {
+
+  // }
+
+  &__requestsSeparator {
+    width: 95%;
+  
+    text-align: center;
+    @include d.tekoFont(bold);
+    font-size: 3em;
+    font-style: italic;
+  
+    color:d.$primary-gray;
+  
+    border: none;
+    border-top: 1px solid d.$primary-gray;
+
+    overflow: visible;
+
+    &::after {
+      background-color: d.$primary-white;
+      content: 'Requests';
+  
+      padding: 0 4px;
+      position: relative;
+      top: -.7em;
+    }
+  }
+
+  &__friendsSeparator {
+    @extend .FriendList__requestsSeparator;
+
+    &::after {
+      content: 'Friends';
+    }
+  }
+
+  &__requestsList {
+    margin: -3.5vh 0 1.5vh 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__friendsList {
+    // @extend .FriendItem__requestsList;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+
+    animation-duration: 1s;
+    animation-name: populateFriend;
+    animation-fill-mode: backwards;
+  }
+
+  &__search {
+    width: 100%;
+    padding: 0;
+    margin: -3vh 0 0 0;
+    
+    display: flex;
+    justify-content: center;
+  }
+
+  &__searchInput {
+    height: 4vh;
+    width: 75%;
+    padding: 0 0 0 5%;
+    margin: 0;
+    border: 1px inset d.$primary-gray;
+  }
+}
+
+.FriendItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 1vh 10% 0 10%;
+  padding: 0 1vh;
+  height: 5vh;
+
+  background-color: d.$primary-color;
+
+  @include d.tekoFont(regular);
+
+  &__pfp {
+    .profileIcon {
+      &--pfp {
+        height: 3em;
+        aspect-ratio: 1/1;
+        margin-right: 1em;
+      }
+    }
+  }
+
+  &__primaryInfo {
+    display: flex;
+    align-items: center;
+  }
+
+  &__fullname {
+    font-size: 3em;
+    align-content: center;
+    height: fit-content;
+    color: d.$primary-black;
+
+    &:hover {
+      color: d.$primary-white;
+    }
+  }
+
+  &__username {
+    font-size: 3em;
+    margin: 0 1vw 0 0;
+
+  }
+
+  &__secondaryInfo {
+    display: flex;
+    align-items: center;
+  }
+
+  &__unfriend {
+    padding: 0;
+    margin: 0 3px 3px 0;
+
+    background-color: transparent;
+    border: none;
+
+    font-size: 3em;
+    font-weight: bold;
+
+    &:hover {
+      color: d.$primary-error;
+      text-shadow: 1px 1px 0 d.$primary-white;
+    }
+
+    &:active {
+      transform: scale(.9);
+    }
+  }
+
+  &__opts {
+    display: flex;
+    
+  }
+
+  &__yes {
+    background-color: transparent;
+    border: none;
+    @include d.tekoFont(bold);
+    font-size: 2.5em;
+
+    &:hover {
+      color: d.$primary-success;
+      text-shadow: 1px 1px 0 d.$primary-white;
+    }
+
+    &:active {
+      transform: scale(.8);
+    }
+
+  }
+
+  &__no {
+    @extend .FriendItem__yes;
+    &:hover {
+      color: d.$primary-error;
+    }
+  }
+}
+
+@include d.desktop {
+}
+
+@keyframes populateFriend {
+  from {
+    margin-top: 100vh;
+  }
+  to {
+    margin-top: 1vh;
+  }
+}

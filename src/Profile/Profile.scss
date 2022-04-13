@@ -1,0 +1,253 @@
+@use '../defaults' as d;
+
+.Profile {
+  &__mainContent {
+    margin-top: 7vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &--fix {
+      margin: 7vh 0 0 0;
+    }
+  }
+}
+
+.Feed--profile {
+  margin-left: 25%;
+}
+
+.Feed--profileNavActive {
+  margin-left: 0;
+  margin-right: 25%;
+}
+
+.EditItem {
+  width: 90vw;
+  font-size: 3em;
+
+  margin: 2vh 0 0 0;
+
+  background-color: d.$primary-white;
+  color: d.$primary-black;
+  box-shadow: .1em .1em 0 d.$primary-darken;
+
+  &__header {
+    @include d.tekoFont(regular);
+    @include d.displayFlex(row);
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    background-color: d.$primary-color;
+
+    box-shadow: 0 2px 2px d.$primary-gray;
+  }
+
+  &__profIcon {
+    height: 2em;
+  }
+
+  &__icon {
+    height: 100%;
+    width: 100%;
+  }
+
+  &__author {
+    margin: 0 1vw 0 1vh;
+  }
+
+  &__timestamp {
+    margin: 0 1vw 0 0;
+    color: d.$primary-black;
+  }
+
+  &__title {
+    @include d.tekoFont(bold);
+    padding: 0 1vh 0 1vh;
+    font-size: .75em;
+  }
+
+  &__text {
+    padding: 0 1vh 1vh 1vh;
+    font-size: .75em;
+    resize: none;
+    font-size: .75em;
+  }
+
+  &__editBtn {
+    background-color: transparent;
+    border: none;
+
+    @include d.tekoFont(bold);
+    font-size: 1em;
+
+    &:hover {
+      color: d.$primary-white;
+      text-shadow: 1px 1px 0 d.$primary-black;
+    }
+
+    &:active {
+      transform: scale(.9);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 1vh 0 0 0;
+  }
+}
+
+.UserInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: 0 5vw;
+  height: 15vh;
+
+  background-color: d.$primary-white;
+  border-bottom: 1vh inset d.$primary-color;
+
+  &__profIcon {
+    width: 25%;
+    margin-right: 2.5vw;
+  }
+
+  &__icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 200%;
+    aspect-ratio: 1/1;
+
+    &--pfp {
+
+      &:hover {
+        box-shadow: 3px 3px 3px d.$primary-black;
+      }
+  
+      &:active {
+        width: 99%;
+        height: 99%;
+      }
+    }
+  }
+
+  &__pfpUpload {
+    display: none;
+  }
+
+  &__about {
+    @include d.tekoFont(bold);
+    margin: 1vh 2vw 0 2vw;
+    width: 75%;
+    font-size: 1.5em;
+
+    &--editing {
+      resize: none;
+    }
+  }
+
+  &__editBtn {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+
+    // @include d.tekoFont(bold);
+    font-size: 1.25em;
+    font-weight: 800;
+
+    &:hover {
+      color: d.$primary-color;
+    }
+
+    &:active {
+      transform: scale(.9);
+    }
+  }
+}
+
+@include d.desktop {
+  .Profile {
+    &__mainContent--fix {
+      margin: 8vh 25% 0 0;
+    }
+  }
+
+  .EditItem {
+    width: 50vw;
+  }
+
+  .UserInfo {
+    position: fixed;
+    margin-top: 7vh;
+    margin-left: 7%;
+    padding: 0;
+    top: 0;
+    left: 0;
+  
+    width: 23vw;
+    height: 90vh;
+    
+    background-color: d.$primary-white;
+    border-bottom: 10vh inset d.$primary-color;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__profIcon {
+      margin: 4vh 0 1vh 0;
+      width: 80%;
+
+      aspect-ratio: 1/1;
+    }
+
+    &__icon {
+      width: 100%;
+      height: 100%;
+
+      &--pfp {
+        border-radius: 200%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+      }
+    }
+
+    &__about {
+      @include d.tekoFont(bold);
+      margin: 1vh 2vw 0 2vw;
+      font-size: 3em;
+
+      &--editing {
+        width: 100%;
+        height: 200%;
+        font-size: .75em;
+        resize: none;
+      }
+    }
+
+    &--hidden {
+      display: none;
+    }
+
+    &__editBtn {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+
+      @include d.tekoFont(bold);
+      font-size: 1em;
+
+      &:hover {
+        color: d.$primary-color;
+      }
+
+      &:active {
+        transform: scale(.9);
+      }
+    }
+  }
+}
